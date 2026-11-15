@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRANSCRYPTO Themer</title>
+<link rel="icon" href="/assets/app.ico">
+<link rel="stylesheet" href="/ui/css/app.css">
+</head>
+<body>
+<div class="bg"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><i class="grain"></i></div>
+
+<div class="app">
+  <aside class="side glass">
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 48 48"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--neon)"/><stop offset="1" stop-color="var(--neon2)"/></linearGradient></defs><path d="M8 10h32v6H27v24h-6V16H8z" fill="url(#lg)"/><path d="M14 36l6-6M34 36l-6-6" stroke="url(#lg)" stroke-width="3" stroke-linecap="round"/></svg></div>
+      <div class="brand-txt"><b>TRANSCRYPTO</b><span>Themer</span></div>
+    </div>
+    <nav id="nav"></nav>
+    <div class="side-foot"><span id="ver">v1.0.0</span><span id="ram" title="Backend memory"></span></div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div>
+        <h1 id="title">Dashboard</h1>
+        <p id="subtitle" class="muted"></p>
+      </div>
+      <div class="top-right">
+        <div id="layerChip" class="chip glass" title="Active preset + your customizations"></div>
+        <button class="btn ghost icon" id="btnMenu" title="Help, features, updates, about (F1)" aria-haspopup="menu"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="12" cy="19" r="1.3"/></svg></button>
+        <button class="btn ghost icon" id="btnReload" title="Reload UI (Ctrl+R)"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+      </div>
+    </header>
+    <section id="view" class="view"></section>
+  </main>
+</div>
+
+<div id="toasts"></div>
+<div id="modalRoot"></div>
+<div id="busy" class="busy hidden"><div class="spinner"></div><div id="busyText">Working…</div></div>
+
+<script src="/ui/js/core.js"></script>
+<script src="/ui/js/widgets.js"></script>
+<script src="/ui/js/views/dashboard.js"></script>
+<script src="/ui/js/views/themes.js"></script>
+<script src="/ui/js/views/wallpapers.js"></script>
+<script src="/ui/js/views/colors.js"></script>
+<script src="/ui/js/views/icons.js"></script>
+<script src="/ui/js/views/cursors.js"></script>
+<script src="/ui/js/views/sounds.js"></script>
+<script src="/ui/js/views/shell.js"></script>
+<script src="/ui/js/views/lock.js"></script>
+<script src="/ui/js/views/boot.js"></script>
+<script src="/ui/js/views/fonts.js"></script>
+<script src="/ui/js/views/backup.js"></script>
+<script src="/ui/js/views/settings.js"></script>
+<script src="/ui/js/help.js"></script>
+<script src="/ui/js/main.js"></script>
+</body>
+</html>

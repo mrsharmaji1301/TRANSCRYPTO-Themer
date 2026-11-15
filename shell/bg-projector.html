@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TRANSCRYPTO Background - Projector</title>
+<style>
+:root { --glow: 125, 211, 252; }
+* { margin: 0; box-sizing: border-box; }
+html, body { width: 100vw; height: 100vh; overflow: hidden; background: #05070a; }
+canvas { position: fixed; inset: 0; width: 100%; height: 100%; }   /* drawn at half resolution: the lights are soft anyway */
+.haze { position: fixed; inset: 0; background: radial-gradient(80% 50% at 50% 110%, rgba(var(--glow), .10), transparent 70%), linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.65)); }
+.vig { position: fixed; inset: 0; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.75)); }
+.grain { position: fixed; inset: -50%; opacity: .06; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); animation: grain 1s steps(6) infinite; }
+@keyframes grain { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-3%,2%); } 40% { transform: translate(2%,-3%); } 60% { transform: translate(-2%,-1%); } 80% { transform: translate(3%,3%); } }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas><div class="haze"></div><div class="vig"></div><div class="grain"></div>
+<script src="bg-common.js"></script>
+<script>
+const PAL = { platinum: '125, 211, 252', solar: '245, 165, 36', rosso: '255, 59, 59' };
+document.documentElement.style.setProperty('--glow', PAL[new URLSearchParams(location.search).get('pal')] || PAL.platinum);
+const cv = document.getElementById('c'), bk = cv.getContext('2d');
+const S = .5;   // canvas scale
+let W, H; const fit = () => { W = cv.width = Math.round(innerWidth * S); H = cv.height = Math.round(innerHeight * S); }; addEventListener('resize', fit); fit();
+const lights = Array.from({ length: 70 }, (_, i) => ({ x: Math.random(), y: .15 + Math.random() * .75, r: 12 + Math.random() * 60, c: [[255, 190, 120], [120, 180, 255], [255, 120, 110], [210, 220, 255]][i % 4],
+  a: .05 + Math.random() * .12, v: (Math.random() - .5) * .03, p: Math.random() * 6 }));   // v: screen widths per second
+let last = 0;
+(function frame(t) {
+  requestAnimationFrame(frame);
+  if (!BG.due(t)) return;   // paused, or not time for the next 30 fps frame
+  const dt = Math.min(.1, (t - last) / 1000 || 0); last = t;
+  bk.clearRect(0, 0, W, H);
+  for (const l of lights) { l.x += l.v * dt; if (l.x < -.05) l.x = 1.05; if (l.x > 1.05) l.x = -.05; const a = l.a * (.7 + .3 * Math.sin(t / 700 + l.p)), x = l.x * W, y = l.y * H, r = l.r * S;
+    const g = bk.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(${l.c},${a})`); g.addColorStop(.7, `rgba(${l.c},${a * .6})`); g.addColorStop(1, `rgba(${l.c},0)`);
+    bk.fillStyle = g; bk.beginPath(); bk.arc(x, y, r, 0, 7); bk.fill(); }
+})(0);
+</script>
+<script>
+(function report() { const q = new URLSearchParams(location.search), t = q.get('t'); if (!t || top !== window) return;
+  const send = () => fetch('/api/do?' + new URLSearchParams({ t, a: 'bgmetrics', vw: Math.round(innerWidth * devicePixelRatio), vh: Math.round(innerHeight * devicePixelRatio) })).catch(() => {});
+  send(); setTimeout(send, 1500); addEventListener('resize', () => setTimeout(send, 200)); })();
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+TRANSCRYPTO Themer - Free Use License
+Copyright (c) 2026 SharmaJi (TRANSCRYPTO). All rights reserved.
+
+TRANSCRYPTO Themer ("the Software") is free to use. It is not open source.
+You may use it only on the terms below. Installing or using the Software
+means you accept these terms.
+
+1. FREE USE
+   You may install and use the Software for free, on any number of computers
+   you own or use, for your own personal use and in your own work.
+
+2. NO DISTRIBUTION
+   You may NOT copy, share, upload, mirror, re-host, sell, rent, lend,
+   bundle or otherwise distribute the Software, its installer, its update
+   packages or any part of them (including its code, presets, icon packs,
+   cursors, sounds, wallpapers, scenes and other artwork) to anyone. The
+   Software is distributed only by SharmaJi (TRANSCRYPTO) through official
+   channels. Point others to the official download instead.
+
+3. NO COMMERCIAL USE BY OTHERS
+   Only SharmaJi (TRANSCRYPTO) may use the Software, or any part of it,
+   commercially. You may NOT sell it, charge for it, charge for installing
+   or setting it up, include it in a paid product or service, or otherwise
+   use it or any part of it to make money, without written permission from
+   SharmaJi (TRANSCRYPTO).
+
+4. NO MODIFIED VERSIONS
+   You may NOT modify, decompile, reverse engineer (except where the law
+   allows it regardless of this term), or publish changed versions or
+   derivative works of the Software or its parts. You may of course change
+   your own settings, themes and backups inside the Software.
+
+5. THIRD-PARTY PARTS
+   The Software includes HackBGRT (Copyright (c) 2016 Lauri Kentta, MIT
+   License; vendor\HackBGRT\LICENSE). Those parts stay under their own
+   licenses.
+
+6. NO WARRANTY
+   The Software changes Windows settings, system files, the boot screen and
+   the boot configuration. It is provided "AS IS", without warranty of any
+   kind, express or implied, including fitness for a particular purpose. Use
+   the built-in backups and System Restore points. To the maximum extent the
+   law allows, SharmaJi (TRANSCRYPTO) is not liable for any damage, data
+   loss or other harm arising from the use of, or inability to use, the
+   Software.
+
+7. TERMINATION
+   If you break these terms, your right to use the Software ends
+   automatically, and you must uninstall it and delete all copies.
+
+All rights not expressly granted here are reserved by SharmaJi
+(TRANSCRYPTO).

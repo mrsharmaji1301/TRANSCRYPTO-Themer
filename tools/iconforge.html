@@ -1,0 +1,60 @@
+<!doctype html>
+<!-- TRANSCRYPTO icon forge: renders ONE icon (?pack=&icon=) at 256x256 on a transparent page.
+     tools/make-icons.ps1 screenshots it with headless Chrome/Edge and packs the PNGs into .ico files.
+     Styles follow the Stitch boards: SHARMAJI // COMMAND CENTER, ORBITAL, PROJECTOR. -->
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 256px; height: 256px; background: transparent; overflow: hidden; }
+.cv { position: relative; width: 256px; height: 256px; display: grid; place-items: center; }
+.tile { position: relative; width: 196px; height: 196px; display: grid; place-items: center; }
+.g { font-size: 112px; line-height: 1; position: relative; z-index: 3; }
+
+/* ---------- SHARMAJI // COMMAND CENTER: machined gunmetal plate, glass sheen, saffron->cyan rim, bolts, tricolor */
+.sharmaji .tile { clip-path: polygon(26px 0, calc(100% - 26px) 0, 100% 26px, 100% calc(100% - 26px), calc(100% - 26px) 100%, 26px 100%, 0 calc(100% - 26px), 0 26px);
+  background: linear-gradient(160deg, #3a3846 0%, #23222d 38%, #14131b 70%, #1d1c27 100%); }
+.sharmaji .rim { position: absolute; inset: 0; clip-path: inherit; padding: 5px; z-index: 4; pointer-events: none;
+  background: linear-gradient(135deg, #ffb35c, #ff8a00 30%, #00e5ff 75%, #8ff4ff);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.sharmaji .sheen { position: absolute; inset: 0; z-index: 2; background: linear-gradient(170deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,.07) 42%, transparent 43%), repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 4px); }
+.sharmaji .bolt { position: absolute; width: 12px; height: 12px; border-radius: 50%; z-index: 4; background: radial-gradient(circle at 35% 35%, #9a98ad, #3b3a4a 70%); box-shadow: 0 0 0 1px #0c0b12; }
+.sharmaji .b1 { left: 30px; top: 16px; } .sharmaji .b2 { right: 30px; bottom: 16px; }
+.sharmaji .tri { position: absolute; left: 44px; right: 44px; bottom: 22px; height: 7px; z-index: 4; background: linear-gradient(90deg, #ff9933 33.3%, #f4f4f4 33.3% 66.6%, #138808 66.6%); }
+.sharmaji .g { background: linear-gradient(160deg, #ffe0b0, #ffb35c 35%, #ff8a00 70%, #ff6a00); -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 0 10px rgba(255,138,0,.75)) drop-shadow(0 2px 0 rgba(0,0,0,.6)); margin-top: -10px; }
+.sharmaji .glow { position: absolute; inset: 22px; z-index: 0; filter: blur(16px); background: linear-gradient(135deg, rgba(255,138,0,.55), rgba(0,229,255,.55)); clip-path: polygon(26px 0, calc(100% - 26px) 0, 100% 26px, 100% calc(100% - 26px), calc(100% - 26px) 100%, 26px 100%, 0 calc(100% - 26px), 0 26px); }
+.sharmaji .accent { position: absolute; right: 34px; top: 30px; width: 14px; height: 14px; border-radius: 50%; z-index: 4; background: #00e5ff; box-shadow: 0 0 12px #00e5ff; }
+
+/* ---------- ORBITAL: liquid aurora droplet with glossy highlight */
+.orbital .tile { border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%; background: radial-gradient(120% 120% at 25% 15%, #b69cff 0%, #7f5af0 30%, #ff6ec7 68%, #ffb86b 100%);
+  box-shadow: inset 0 -18px 36px rgba(60,10,80,.45), inset 0 14px 30px rgba(255,255,255,.25), 0 18px 34px -12px rgba(255,110,199,.7); }
+.orbital .hi { position: absolute; left: 30px; top: 22px; width: 88px; height: 52px; border-radius: 50%; z-index: 2; background: radial-gradient(ellipse at 50% 40%, rgba(255,255,255,.85), rgba(255,255,255,0) 70%); transform: rotate(-22deg); }
+.orbital .g { color: #fff; filter: drop-shadow(0 3px 6px rgba(70,20,110,.55)); }
+.orbital .ring { position: absolute; inset: -6px; border-radius: 50%; z-index: 0; border: 3px solid rgba(255,184,107,.55); transform: rotate(-18deg) scaleY(.42); }
+
+/* ---------- PROJECTOR: smoked glass tile, glass highlight, ice-blue etched glyph, scanlines */
+.projector .tile { border-radius: 44px; background: linear-gradient(160deg, rgba(48,56,68,.96), rgba(16,19,24,.97) 55%, rgba(26,31,39,.97));
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.35), inset 0 0 0 2px rgba(255,255,255,.08), inset 0 -10px 24px rgba(0,0,0,.5), 0 20px 40px -14px rgba(0,0,0,.9), 0 0 26px -4px rgba(125,211,252,.45); }
+.projector .sheen { position: absolute; inset: 0; border-radius: inherit; z-index: 2; background: linear-gradient(125deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,.04) 38%, transparent 39%, transparent 70%, rgba(125,211,252,.10) 100%); }
+.projector .scan { position: absolute; inset: 0; border-radius: inherit; z-index: 2; background: repeating-linear-gradient(0deg, rgba(125,211,252,.05) 0 1px, transparent 1px 5px); }
+.projector .g { background: linear-gradient(180deg, #ffffff, #dff6ff 40%, #7dd3fc); -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 0 12px rgba(125,211,252,.85)); }
+.projector .bar { position: absolute; left: 50%; bottom: 22px; width: 46px; height: 4px; margin-left: -23px; border-radius: 4px; z-index: 3; background: #dff6ff; box-shadow: 0 0 12px #7dd3fc; }
+</style>
+</head>
+<body>
+<div class="cv" id="cv"></div>
+<script>
+const q = new URLSearchParams(location.search), pack = q.get('pack') || 'projector', icon = q.get('icon') || 'folder';
+const G = { folder: 'ti-folder', folderOpen: 'ti-folder-open', drive: 'ti-server-2', sysdrive: 'ti-brand-windows', thispc: 'ti-device-desktop', network: 'ti-network', user: 'ti-user-circle',
+  recycleEmpty: 'ti-trash', recycleFull: 'ti-trash-x', desktop: 'ti-layout-dashboard', downloads: 'ti-download', documents: 'ti-file-text', pictures: 'ti-photo', music: 'ti-music',
+  videos: 'ti-movie', projects: 'ti-code', games: 'ti-device-gamepad-2' };
+const extra = { sharmaji: '<span class="glow"></span>', orbital: '<span class="ring"></span>', projector: '' }[pack];
+const inner = { sharmaji: '<span class="sheen"></span><span class="rim"></span><span class="bolt b1"></span><span class="bolt b2"></span><span class="accent"></span><span class="tri"></span>',
+  orbital: '<span class="hi"></span>', projector: '<span class="sheen"></span><span class="scan"></span><span class="bar"></span>' }[pack];
+document.body.className = pack;
+document.getElementById('cv').innerHTML = `${extra}<div class="tile">${inner}<i class="g ti ${G[icon] || 'ti-folder'}"></i></div>`;
+</script>
+</body>
+</html>

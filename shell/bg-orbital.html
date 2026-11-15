@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TRANSCRYPTO Background - Orbital</title>
+<style>
+:root { --g1: #7f5af0; --g2: #ff6ec7; --g3: #ffb86b; --deep: #0b0820; }
+* { margin: 0; box-sizing: border-box; }
+html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--deep); }
+/* soft blobs drawn as radial gradients (a 90px blur filter over moving layers cost a whole CPU core) */
+.mesh { position: fixed; inset: -20%; opacity: .55; }
+.mesh i { position: absolute; border-radius: 50%; will-change: transform; }
+.mesh i:nth-child(1) { width: 66vw; height: 66vw; left: -3%; top: 32%; background: radial-gradient(circle, var(--g1) 0, var(--g1) 30%, transparent 70%); animation: drift 10s ease-in-out infinite; }
+.mesh i:nth-child(2) { width: 58vw; height: 58vw; right: 0; top: -3%; background: radial-gradient(circle, var(--g2) 0, var(--g2) 30%, transparent 70%); animation: drift 13s ease-in-out infinite reverse; }
+.mesh i:nth-child(3) { width: 50vw; height: 50vw; left: 37%; bottom: -8%; background: radial-gradient(circle, var(--g3) 0, var(--g3) 30%, transparent 70%); animation: drift 16s ease-in-out infinite; opacity: .7; }
+@keyframes drift { 50% { transform: translate(9vw, -6vw) scale(1.15); } }
+.grain { position: fixed; inset: 0; opacity: .08; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 3px 3px; mix-blend-mode: overlay; }
+.orbits { position: fixed; left: 50%; top: 50%; width: 120vmin; height: 120vmin; margin: -60vmin 0 0 -60vmin; border-radius: 50%; border: 1px solid rgba(255,255,255,.06); animation: spin 90s linear infinite; }
+.orbits::before { content: ""; position: absolute; inset: 18%; border-radius: 50%; border: 1px dashed rgba(255,255,255,.07); }
+.orbits::after { content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%; top: -5px; left: calc(50% - 5px); background: var(--g3); box-shadow: 0 0 20px var(--g3); }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="mesh"><i></i><i></i><i></i></div><div class="orbits"></div><div class="grain"></div>
+<script src="bg-common.js"></script>
+<script>
+const P = { aurora: ['#7f5af0', '#ff6ec7', '#ffb86b', '#0b0820'], lagoon: ['#00c6ff', '#38f9d7', '#d4ff4f', '#03141c'], ember: ['#ff3d71', '#ff8a00', '#ffe066', '#1a0608'] };
+const p = P[new URLSearchParams(location.search).get('pal')] || P.aurora, s = document.documentElement.style;
+['--g1', '--g2', '--g3', '--deep'].forEach((k, i) => s.setProperty(k, p[i]));
+</script>
+<script>
+(function report() { const q = new URLSearchParams(location.search), t = q.get('t'); if (!t || top !== window) return;
+  const send = () => fetch('/api/do?' + new URLSearchParams({ t, a: 'bgmetrics', vw: Math.round(innerWidth * devicePixelRatio), vh: Math.round(innerHeight * devicePixelRatio) })).catch(() => {});
+  send(); setTimeout(send, 1500); addEventListener('resize', () => setTimeout(send, 200)); })();
+</script>
+</body>
+</html>

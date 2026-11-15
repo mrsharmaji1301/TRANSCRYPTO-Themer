@@ -1,0 +1,11 @@
+# build output and local-only material (docs/ - tests, audit, backlog - is kept in git, not shipped)
+dist/
+bin/
+.claude/
+graphify-out/
+*.log
+
+# internal dev notes: local only, never pushed
+docs/BACKLOG.md
+# local tool settings
+.serena/

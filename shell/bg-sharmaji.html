@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TRANSCRYPTO Background - SharmaJi Command Center</title>
+<style>
+:root { --a: #ff8a00; --b: #00e5ff; }
+* { margin: 0; box-sizing: border-box; }
+html, body { width: 100vw; height: 100vh; overflow: hidden; background: #07060c; }
+.bg { position: fixed; inset: 0; background: radial-gradient(55% 65% at 75% 15%, color-mix(in srgb, var(--b) 16%, transparent), transparent 60%),
+  radial-gradient(50% 60% at 8% 95%, color-mix(in srgb, var(--a) 20%, transparent), transparent 60%), repeating-linear-gradient(45deg, #0b0a12 0 2px, #07060c 2px 9px); }
+.hex { position: fixed; inset: 0; opacity: .07; background: radial-gradient(circle at 50% 50%, transparent 0 14px, var(--b) 15px, transparent 16px) 0 0 / 34px 30px; }
+.chakra { position: fixed; left: 50%; top: 45%; width: 70vmin; height: 70vmin; margin: -35vmin 0 0 -35vmin; border-radius: 50%; opacity: .07;
+  background: repeating-conic-gradient(var(--b) 0 1deg, transparent 1deg 15deg); -webkit-mask: radial-gradient(circle, transparent 30%, #000 31%, #000 49%, transparent 50%); mask: radial-gradient(circle, transparent 30%, #000 31%, #000 49%, transparent 50%); animation: spin 60s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+canvas { position: fixed; inset: 0; }
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="hex"></div><div class="chakra"></div><canvas id="c"></canvas>
+<script src="bg-common.js"></script>
+<script>
+const P = { sharmaji: ['#ff8a00', '#00e5ff'], transcrypto: ['#00f0ff', '#ff2bd6'], alien: ['#39ff14', '#7a5cff'] };
+const p = P[new URLSearchParams(location.search).get('pal')] || P.sharmaji;
+document.documentElement.style.setProperty('--a', p[0]); document.documentElement.style.setProperty('--b', p[1]);
+const cv = document.getElementById('c'), cx = cv.getContext('2d');
+let W, H; const fit = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; }; addEventListener('resize', fit); fit();
+const em = Array.from({ length: 110 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.8 + .4, v: Math.random() * .05 + .018, w: Math.random() * 6.3, c: Math.random() < .5 }));   // v: screen heights per second
+// one glowing ember per colour, drawn once; per-frame shadowBlur on 110 embers was the expensive part
+const sprite = (col) => { const s = document.createElement('canvas'); s.width = s.height = 36; const g = s.getContext('2d');
+  g.shadowBlur = 8; g.shadowColor = col; g.fillStyle = col; g.beginPath(); g.arc(18, 18, 2, 0, 7); g.fill(); return s; };
+const spr = [sprite(p[1]), sprite(p[0])];
+let last = 0;
+(function frame(t = 0) {
+  requestAnimationFrame(frame);
+  if (!BG.due(t)) return;   // paused, or not time for the next 30 fps frame
+  const dt = Math.min(.1, (t - last) / 1000 || 0); last = t;
+  cx.clearRect(0, 0, W, H);
+  for (const e of em) { e.y -= e.v * dt; e.w += 1.6 * dt; e.x += Math.sin(e.w) * .02 * dt; if (e.y < -.01) { e.y = 1.01; e.x = Math.random(); }
+    cx.globalAlpha = .25 + .35 * Math.abs(Math.sin(e.w)); const d = 18 * e.r; cx.drawImage(spr[e.c ? 1 : 0], e.x * W - d / 2, e.y * H - d / 2, d, d); }
+  cx.globalAlpha = 1;
+})();
+</script>
+<script>
+(function report() { const q = new URLSearchParams(location.search), t = q.get('t'); if (!t || top !== window) return;
+  const send = () => fetch('/api/do?' + new URLSearchParams({ t, a: 'bgmetrics', vw: Math.round(innerWidth * devicePixelRatio), vh: Math.round(innerHeight * devicePixelRatio) })).catch(() => {});
+  send(); setTimeout(send, 1500); addEventListener('resize', () => setTimeout(send, 200)); })();
+</script>
+</body>
+</html>

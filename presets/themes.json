@@ -1,0 +1,1058 @@
+{
+  "version": 1,
+  "presets": [
+    {
+      "id": "transcrypto-neon",
+      "name": "TRANSCRYPTO Neon",
+      "desc": "Signature cyan × magenta glow on deep black.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "glow icons",
+        "neon cursors"
+      ],
+      "palette": {
+        "bg": "#07070d",
+        "surface": "#15152a",
+        "text": "#eef0ff",
+        "accent": "#00f0ff",
+        "accent2": "#ff2bd6"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#00F0FF",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": true,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#07070d"
+      },
+      "cursors": {
+        "pack": "pack:tc-transcrypto-neon"
+      },
+      "icons": {
+        "pack": "transcrypto-neon",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      }
+    },
+    {
+      "id": "catppuccin-latte",
+      "name": "Catppuccin Latte",
+      "desc": "Soft pastel light theme, mauve accents.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "light",
+        "soft icons",
+        "light cursors"
+      ],
+      "palette": {
+        "bg": "#eff1f5",
+        "surface": "#e6e9ef",
+        "text": "#4c4f69",
+        "accent": "#8839ef",
+        "accent2": "#ea76cb"
+      },
+      "colors": {
+        "systemMode": "light",
+        "appsMode": "light",
+        "accent": "#8839EF",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": true
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#dce0e8"
+      },
+      "cursors": {
+        "pack": "pack:tc-catppuccin-latte"
+      },
+      "icons": {
+        "pack": "catppuccin-latte",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "catppuccin-mocha",
+      "name": "Catppuccin Mocha",
+      "desc": "Soothing pastel dark theme loved by r/unixporn.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "soft icons",
+        "color cursors"
+      ],
+      "palette": {
+        "bg": "#1e1e2e",
+        "surface": "#313244",
+        "text": "#cdd6f4",
+        "accent": "#cba6f7",
+        "accent2": "#f5c2e7"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#CBA6F7",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#1e1e2e"
+      },
+      "cursors": {
+        "pack": "pack:tc-catppuccin-mocha"
+      },
+      "icons": {
+        "pack": "catppuccin-mocha",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "dracula",
+      "name": "Dracula",
+      "desc": "The classic purple-pink dark theme, flat icons.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "flat icons",
+        "dark cursors"
+      ],
+      "palette": {
+        "bg": "#282a36",
+        "surface": "#44475a",
+        "text": "#f8f8f2",
+        "accent": "#bd93f9",
+        "accent2": "#ff79c6"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#BD93F9",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": true
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#282a36"
+      },
+      "cursors": {
+        "pack": "pack:tc-dracula"
+      },
+      "icons": {
+        "pack": "dracula",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "nord",
+      "name": "Nord",
+      "desc": "Arctic, north-bluish calm with line icons.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "outline icons",
+        "dark cursors"
+      ],
+      "palette": {
+        "bg": "#2e3440",
+        "surface": "#3b4252",
+        "text": "#eceff4",
+        "accent": "#88c0d0",
+        "accent2": "#81a1c1"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#88C0D0",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#3b4252"
+      },
+      "cursors": {
+        "pack": "pack:tc-nord"
+      },
+      "icons": {
+        "pack": "nord",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      }
+    },
+    {
+      "id": "nord-snow",
+      "name": "Nord Snow Storm",
+      "desc": "Nord, but bright: snow white with frost blue.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "light",
+        "outline icons",
+        "light cursors"
+      ],
+      "palette": {
+        "bg": "#eceff4",
+        "surface": "#e5e9f0",
+        "text": "#2e3440",
+        "accent": "#5e81ac",
+        "accent2": "#88c0d0"
+      },
+      "colors": {
+        "systemMode": "light",
+        "appsMode": "light",
+        "accent": "#5E81AC",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": true
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#d8dee9"
+      },
+      "cursors": {
+        "pack": "pack:tc-nord-snow"
+      },
+      "icons": {
+        "pack": "nord-snow",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      }
+    },
+    {
+      "id": "tokyo-night",
+      "name": "Tokyo Night",
+      "desc": "Neon city lights over a dark blue night.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "glow icons",
+        "neon cursors"
+      ],
+      "palette": {
+        "bg": "#1a1b26",
+        "surface": "#24283b",
+        "text": "#c0caf5",
+        "accent": "#7aa2f7",
+        "accent2": "#bb9af7"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#7AA2F7",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#1a1b26"
+      },
+      "cursors": {
+        "pack": "pack:tc-tokyo-night"
+      },
+      "icons": {
+        "pack": "tokyo-night",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "gruvbox-dark",
+      "name": "Gruvbox Dark",
+      "desc": "Retro groove, warm and earthy. Orange taskbar.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "flat icons",
+        "color cursors"
+      ],
+      "palette": {
+        "bg": "#282828",
+        "surface": "#3c3836",
+        "text": "#ebdbb2",
+        "accent": "#fe8019",
+        "accent2": "#b8bb26"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#FE8019",
+        "autoAccent": false,
+        "transparency": false,
+        "accentOnStart": true,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#32302f"
+      },
+      "cursors": {
+        "pack": "pack:tc-gruvbox-dark"
+      },
+      "icons": {
+        "pack": "gruvbox-dark",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "gruvbox-light",
+      "name": "Gruvbox Light",
+      "desc": "Retro groove on warm cream paper.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "light",
+        "flat icons",
+        "light cursors"
+      ],
+      "palette": {
+        "bg": "#fbf1c7",
+        "surface": "#ebdbb2",
+        "text": "#3c3836",
+        "accent": "#d65d0e",
+        "accent2": "#79740e"
+      },
+      "colors": {
+        "systemMode": "light",
+        "appsMode": "light",
+        "accent": "#D65D0E",
+        "autoAccent": false,
+        "transparency": false,
+        "accentOnStart": false,
+        "accentOnTitlebars": true
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#ebdbb2"
+      },
+      "cursors": {
+        "pack": "pack:tc-gruvbox-light"
+      },
+      "icons": {
+        "pack": "gruvbox-light",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "rose-pine",
+      "name": "Rosé Pine",
+      "desc": "All natural pine, faux fur and a bit of soho vibes.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "soft icons",
+        "dark cursors"
+      ],
+      "palette": {
+        "bg": "#191724",
+        "surface": "#26233a",
+        "text": "#e0def4",
+        "accent": "#ebbcba",
+        "accent2": "#c4a7e7"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#EBBCBA",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#191724"
+      },
+      "cursors": {
+        "pack": "pack:tc-rose-pine"
+      },
+      "icons": {
+        "pack": "rose-pine",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      }
+    },
+    {
+      "id": "rose-pine-dawn",
+      "name": "Rosé Pine Dawn",
+      "desc": "Morning light version of Rosé Pine.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "light",
+        "soft icons",
+        "light cursors"
+      ],
+      "palette": {
+        "bg": "#faf4ed",
+        "surface": "#fffaf3",
+        "text": "#575279",
+        "accent": "#d7827e",
+        "accent2": "#907aa9"
+      },
+      "colors": {
+        "systemMode": "light",
+        "appsMode": "light",
+        "accent": "#D7827E",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": true
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#f2e9e1"
+      },
+      "cursors": {
+        "pack": "pack:tc-rose-pine-dawn"
+      },
+      "icons": {
+        "pack": "rose-pine-dawn",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      }
+    },
+    {
+      "id": "one-dark",
+      "name": "One Dark",
+      "desc": "The iconic editor theme, flat and focused.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "flat icons",
+        "dark cursors"
+      ],
+      "palette": {
+        "bg": "#282c34",
+        "surface": "#3e4451",
+        "text": "#abb2bf",
+        "accent": "#61afef",
+        "accent2": "#c678dd"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#61AFEF",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#21252b"
+      },
+      "cursors": {
+        "pack": "pack:tc-one-dark"
+      },
+      "icons": {
+        "pack": "one-dark",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "everforest",
+      "name": "Everforest",
+      "desc": "Green, comfy and easy on the eyes.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "soft icons",
+        "color cursors"
+      ],
+      "palette": {
+        "bg": "#2d353b",
+        "surface": "#3d484d",
+        "text": "#d3c6aa",
+        "accent": "#a7c080",
+        "accent2": "#83c092"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#A7C080",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": true,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#2d353b"
+      },
+      "cursors": {
+        "pack": "pack:tc-everforest"
+      },
+      "icons": {
+        "pack": "everforest",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      }
+    },
+    {
+      "id": "solarized-light",
+      "name": "Solarized Light",
+      "desc": "Precision colors, the light way. Line icons.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "light",
+        "outline icons",
+        "light cursors"
+      ],
+      "palette": {
+        "bg": "#fdf6e3",
+        "surface": "#eee8d5",
+        "text": "#586e75",
+        "accent": "#268bd2",
+        "accent2": "#2aa198"
+      },
+      "colors": {
+        "systemMode": "light",
+        "appsMode": "light",
+        "accent": "#268BD2",
+        "autoAccent": false,
+        "transparency": false,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#eee8d5"
+      },
+      "cursors": {
+        "pack": "pack:tc-solarized-light"
+      },
+      "icons": {
+        "pack": "solarized-light",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "sakura",
+      "name": "Sakura",
+      "desc": "Cherry blossom pink with a sky-blue touch.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "light",
+        "soft icons",
+        "color cursors"
+      ],
+      "palette": {
+        "bg": "#fff0f5",
+        "surface": "#ffe4ec",
+        "text": "#5a3d4a",
+        "accent": "#ff5c8a",
+        "accent2": "#8fd3fe"
+      },
+      "colors": {
+        "systemMode": "light",
+        "appsMode": "light",
+        "accent": "#FF5C8A",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": true
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#ffd6e5"
+      },
+      "cursors": {
+        "pack": "pack:tc-sakura"
+      },
+      "icons": {
+        "pack": "sakura",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "ocean-deep",
+      "name": "Ocean Deep",
+      "desc": "Deep sea blue with bioluminescent teal.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "glow icons",
+        "neon cursors"
+      ],
+      "palette": {
+        "bg": "#0b2545",
+        "surface": "#13315c",
+        "text": "#e0f2ff",
+        "accent": "#13c4a3",
+        "accent2": "#4cc9f0"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#13C4A3",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": true,
+        "accentOnTitlebars": true
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#0b2545"
+      },
+      "cursors": {
+        "pack": "pack:tc-ocean-deep"
+      },
+      "icons": {
+        "pack": "ocean-deep",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "synthwave-sunset",
+      "name": "Synthwave Sunset",
+      "desc": "80s outrun: hot pink, gold and purple haze.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "glow icons",
+        "neon cursors"
+      ],
+      "palette": {
+        "bg": "#241b2f",
+        "surface": "#34294f",
+        "text": "#f8f8f2",
+        "accent": "#ff7edb",
+        "accent2": "#fede5d"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#FF7EDB",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": true,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#2b1640"
+      },
+      "cursors": {
+        "pack": "pack:tc-synthwave-sunset"
+      },
+      "icons": {
+        "pack": "synthwave-sunset",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "neon-night",
+      "name": "Neon Night",
+      "desc": "Rain-soaked megacity: acid yellow and cyan.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "glow icons",
+        "neon cursors"
+      ],
+      "palette": {
+        "bg": "#0a0a12",
+        "surface": "#1a1026",
+        "text": "#f0f0f0",
+        "accent": "#fcee0a",
+        "accent2": "#00f0ff"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#FCEE0A",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": true,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#0a0a12"
+      },
+      "cursors": {
+        "pack": "pack:tc-neon-night"
+      },
+      "icons": {
+        "pack": "neon-night",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      }
+    },
+    {
+      "id": "matrix",
+      "name": "Matrix",
+      "desc": "Green phosphor on pure black. Silent.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "glow icons",
+        "neon cursors"
+      ],
+      "palette": {
+        "bg": "#020a04",
+        "surface": "#0b1f10",
+        "text": "#c8ffd4",
+        "accent": "#00ff41",
+        "accent2": "#008f11"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#00FF41",
+        "autoAccent": false,
+        "transparency": false,
+        "accentOnStart": true,
+        "accentOnTitlebars": true
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#000000"
+      },
+      "cursors": {
+        "pack": "pack:tc-matrix"
+      },
+      "icons": {
+        "pack": "matrix",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "silent"
+      }
+    },
+    {
+      "id": "mono-paper",
+      "name": "Mono Paper",
+      "desc": "Black ink on white paper. No color, no noise.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "light",
+        "mono icons",
+        "light cursors"
+      ],
+      "palette": {
+        "bg": "#f4f4f4",
+        "surface": "#ffffff",
+        "text": "#1a1a1a",
+        "accent": "#2b2b2b",
+        "accent2": "#8a8a8a"
+      },
+      "colors": {
+        "systemMode": "light",
+        "appsMode": "light",
+        "accent": "#2B2B2B",
+        "autoAccent": false,
+        "transparency": false,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#e9e9e9"
+      },
+      "cursors": {
+        "pack": "pack:tc-mono-paper"
+      },
+      "icons": {
+        "pack": "mono-paper",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      }
+    },
+    {
+      "id": "midnight-mono",
+      "name": "Midnight Mono",
+      "desc": "Grayscale dark: calm, solid, distraction free.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "mono icons",
+        "dark cursors"
+      ],
+      "palette": {
+        "bg": "#0d0d0d",
+        "surface": "#1a1a1a",
+        "text": "#e6e6e6",
+        "accent": "#d0d0d0",
+        "accent2": "#7a7a7a"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#D0D0D0",
+        "autoAccent": false,
+        "transparency": false,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#121212"
+      },
+      "cursors": {
+        "pack": "pack:tc-midnight-mono"
+      },
+      "icons": {
+        "pack": "midnight-mono",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "silent"
+      }
+    },
+    {
+      "id": "windows-11",
+      "name": "Windows 11 Default",
+      "desc": "Stock Windows 11 look — light mode, blue accent, Bloom wallpaper.",
+      "author": "Microsoft",
+      "tags": [
+        "light",
+        "stock"
+      ],
+      "palette": {
+        "bg": "#cfe3f7",
+        "surface": "#f3f3f3",
+        "text": "#1b1b1b",
+        "accent": "#0078d4",
+        "accent2": "#4cc2ff"
+      },
+      "colors": {
+        "systemMode": "light",
+        "appsMode": "light",
+        "accent": "#0078D4",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "image",
+        "image": "C:\\Windows\\Web\\Wallpaper\\Windows\\img0.jpg",
+        "fit": "fill"
+      },
+      "cursors": {
+        "pack": "default",
+        "size": 32
+      },
+      "icons": {
+        "pack": "default",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "default"
+      }
+    },
+    {
+      "id": "sharmaji-command-center",
+      "name": "SharmaJi Command Center",
+      "desc": "Machined gunmetal shell, saffron x cyan neon, a Start menu that assembles itself.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "custom shell",
+        "live background",
+        "machined icons"
+      ],
+      "palette": {
+        "bg": "#07060b",
+        "surface": "#1d1c27",
+        "text": "#e9ecff",
+        "accent": "#ff8a00",
+        "accent2": "#00e5ff"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#FF8A00",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": true,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#07060b"
+      },
+      "cursors": {
+        "pack": "pack:tc-synthwave-sunset"
+      },
+      "icons": {
+        "pack": "sharmaji",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      },
+      "shell": {
+        "design": "sharmaji",
+        "palette": "sharmaji"
+      },
+      "liveBg": {
+        "design": "sharmaji",
+        "palette": "sharmaji"
+      }
+    },
+    {
+      "id": "orbital",
+      "name": "Orbital",
+      "desc": "Liquid aurora shell: the bar melts into a sun and your apps go into orbit.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "custom shell",
+        "live background",
+        "liquid icons"
+      ],
+      "palette": {
+        "bg": "#0b0820",
+        "surface": "#1c1240",
+        "text": "#f4f1ff",
+        "accent": "#7f5af0",
+        "accent2": "#ff6ec7"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#7F5AF0",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": true,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#0b0820"
+      },
+      "cursors": {
+        "pack": "pack:tc-catppuccin-mocha"
+      },
+      "icons": {
+        "pack": "orbital",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      },
+      "shell": {
+        "design": "orbital",
+        "palette": "aurora"
+      },
+      "liveBg": {
+        "design": "orbital",
+        "palette": "aurora"
+      }
+    },
+    {
+      "id": "projector",
+      "name": "Projector",
+      "desc": "Smoked-glass dashboard; the Start menu is projected as a hologram.",
+      "author": "TRANSCRYPTO",
+      "tags": [
+        "dark",
+        "custom shell",
+        "live background",
+        "glass icons"
+      ],
+      "palette": {
+        "bg": "#05070a",
+        "surface": "#161a20",
+        "text": "#e8eef3",
+        "accent": "#7dd3fc",
+        "accent2": "#dff6ff"
+      },
+      "colors": {
+        "systemMode": "dark",
+        "appsMode": "dark",
+        "accent": "#7DD3FC",
+        "autoAccent": false,
+        "transparency": true,
+        "accentOnStart": false,
+        "accentOnTitlebars": false
+      },
+      "wallpaper": {
+        "type": "solid",
+        "color": "#05070a"
+      },
+      "cursors": {
+        "pack": "pack:tc-midnight-mono"
+      },
+      "icons": {
+        "pack": "projector",
+        "shortcutArrow": true
+      },
+      "sounds": {
+        "scheme": "minimal"
+      },
+      "shell": {
+        "design": "projector",
+        "palette": "platinum"
+      },
+      "liveBg": {
+        "design": "projector",
+        "palette": "platinum"
+      }
+    }
+  ]
+}

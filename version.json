@@ -1,0 +1,36 @@
+{
+    "app": "TRANSCRYPTO Themer",
+    "version": "2.4.1",
+    "date": "2026-11-15",
+    "notes": "TRANSCRYPTO 2.4: the custom taskbars, Start menus and live scenes run on Microsoft WebView2 inside TRANSCRYPTO's own windows, the volume slider works, and the shells show the signed-in user.",
+    "changes": [
+        {
+            "type": "improved",
+            "text": "The custom shells show the signed-in Windows user: the SharmaJi Command Center menu title and badges, the Orbital core and the Projector avatar use your name and initials"
+        },
+        {
+            "type": "improved",
+            "text": "The custom taskbars (SharmaJi, Orbital, Projector), their Start menus and the live scenes now run on Microsoft WebView2 inside TRANSCRYPTO's own windows: no hidden Chrome windows or Chrome processes any more, nothing to find, move or reattach, and a crashed or stuck page restarts by itself"
+        },
+        {
+            "type": "fixed",
+            "text": "Quick settings volume slider did nothing useful: any move jumped the volume to 100 % (the level was added instead of set). It now sets the exact level, and moving it up unmutes"
+        },
+        {
+            "type": "improved",
+            "text": "Files dropped on a taskbar app now reach the engine with their real paths (from anywhere, not only Explorer's selection or the desktop)"
+        },
+        {
+            "type": "improved",
+            "text": "Safety: if the custom taskbar's page can't start, the Windows taskbar comes back within 15 seconds instead of leaving you without one"
+        },
+        {
+            "type": "improved",
+            "text": "Switching between SharmaJi, Orbital and Projector, their palettes or the live scene only swaps the page: the taskbar window stays, the Windows taskbar no longer flashes up in between"
+        },
+        {
+            "type": "fixed",
+            "text": "The live scene was torn down and built again at every engine start and every settings change (the static wallpaper was repainted even when no video wallpaper had been running)"
+        }
+    ]
+}

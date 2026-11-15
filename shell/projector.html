@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TRANSCRYPTO Shell - Projector</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root { --ac: #dff6ff; --ac2: #7dd3fc; --glow: 125, 211, 252; }
+* { box-sizing: border-box; margin: 0; }
+html { background: #05070a; }
+html, body { width: 100vw; height: 100vh; overflow: hidden; color: #e8eef3; font-family: 'Inter Tight', sans-serif; user-select: none; }
+body { background: transparent; }
+.stage { position: absolute; width: 1280px; height: 720px; }
+.tcTip { position: fixed; z-index: 100; display: none; font: 400 11px 'IBM Plex Mono'; letter-spacing: .06em; padding: 4px 9px; border-radius: 6px; background: rgba(10,12,16,.92); border: 1px solid rgba(var(--glow), .35); color: var(--ac); white-space: nowrap; pointer-events: none; }
+
+.smoke { background: linear-gradient(180deg, rgba(22,26,32,.62), rgba(10,12,16,.72)); backdrop-filter: blur(26px) saturate(140%); -webkit-backdrop-filter: blur(26px) saturate(140%);
+  border: 1px solid rgba(255,255,255,.07); box-shadow: inset 0 1px 0 rgba(255,255,255,.10), inset 0 0 0 1px rgba(255,255,255,.02), 0 40px 80px -30px rgba(0,0,0,.9); }
+
+/* dashboard bar */
+.bar { position: absolute; left: 50%; transform: translateX(-50%); top: 676px; height: 44px; border-radius: 12px 12px 0 0; border-bottom: none; z-index: 40; display: flex; align-items: center; padding: 0 8px; gap: 6px; white-space: nowrap; }
+.bar .line { position: absolute; left: 50%; top: -1px; height: 1px; width: 0; transform: translateX(-50%); background: linear-gradient(90deg, transparent, var(--ac), transparent); box-shadow: 0 0 12px rgba(var(--glow), .9); }
+.bar .slit { position: absolute; left: 50%; top: -2px; width: 0; height: 3px; transform: translateX(-50%); border-radius: 2px; background: #fff; box-shadow: 0 0 18px 4px rgba(var(--glow), .9); }
+.start { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; position: relative; margin: 0 3px; flex: none; }
+.start::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid rgba(232,238,243,.55); transition: all .3s; }
+.start::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ac); box-shadow: 0 0 10px rgba(var(--glow), 1); transition: all .3s; }
+.start:hover::before { border-color: var(--ac); box-shadow: 0 0 14px rgba(var(--glow), .6); }
+.start.on::before { border-color: var(--ac); box-shadow: 0 0 18px rgba(var(--glow), .9), inset 0 0 10px rgba(var(--glow), .5); }
+.app { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; cursor: pointer; position: relative; transition: all .2s; flex: none; }
+.app img { width: 22px; height: 22px; opacity: .92; }
+.app:hover { background: rgba(255,255,255,.07); } .app:hover img { opacity: 1; }
+.app.run::after { content: ""; position: absolute; bottom: 2px; width: 10px; height: 2px; border-radius: 2px; background: rgba(232,238,243,.55); }
+.app.act::after { width: 16px; background: var(--ac); box-shadow: 0 0 6px rgba(var(--glow), 1); }
+.sep { width: 1px; height: 20px; background: rgba(255,255,255,.1); margin: 0 4px; flex: none; }
+.tray { display: flex; align-items: center; gap: 4px; font-size: 15px; color: rgba(232,238,243,.7); flex: none; }
+.tray i { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 8px; }
+.tray i:hover { background: rgba(255,255,255,.07); }
+.tray i { cursor: pointer; } .tray i:hover { color: #fff; }
+.tm { font: 400 12px 'IBM Plex Mono'; color: #e8eef3; letter-spacing: .04em; cursor: pointer; padding: 0 6px; }
+.gear, .quit { width: 28px; height: 28px; display: grid; place-items: center; cursor: pointer; border-radius: 8px; flex: none; }
+.gear { color: rgba(232,238,243,.8); font-size: 16px; opacity: 0; transition: opacity .2s, transform .3s; }
+.gear:hover { opacity: 1; transform: rotate(60deg); filter: drop-shadow(0 0 6px rgba(var(--glow), .9)); }
+.quit { color: #ff2a3d; font-size: 17px; opacity: 0; transition: opacity .2s, transform .2s; filter: drop-shadow(0 0 4px #ff2a3d) drop-shadow(0 0 10px rgba(255,42,61,.8)); animation: redglow 2.4s ease-in-out infinite; }
+.quit:hover { opacity: 1; transform: scale(1.15); } .quit.armed { opacity: 1; animation: blink .4s steps(1) infinite; }
+@keyframes redglow { 50% { filter: drop-shadow(0 0 2px #ff2a3d) drop-shadow(0 0 16px #ff2a3d); } }
+@keyframes blink { 50% { opacity: .4; } }
+
+/* projector */
+.beam { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; z-index: 20; pointer-events: none; opacity: 0;
+  clip-path: polygon(620px 676px, 660px 676px, 1090px 150px, 190px 150px);
+  background: linear-gradient(0deg, rgba(var(--glow), .30), rgba(var(--glow), .06) 60%, rgba(var(--glow), .02)); mix-blend-mode: screen; }
+#dust { position: absolute; inset: 0; z-index: 21; pointer-events: none; opacity: 0; }
+.wire { position: absolute; left: 190px; top: 150px; width: 900px; height: 420px; z-index: 32; pointer-events: none; overflow: visible; opacity: 0; }
+.wire rect, .wire line { fill: none; stroke: rgba(var(--glow), .9); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.wire line { stroke: rgba(var(--glow), .25); stroke-dasharray: 2 6; }
+.scan { position: absolute; left: 170px; width: 940px; height: 2px; z-index: 35; pointer-events: none; opacity: 0; background: linear-gradient(90deg, transparent, #fff, transparent); box-shadow: 0 0 20px 6px rgba(var(--glow), .7); }
+.menu { position: absolute; left: 190px; top: 150px; width: 900px; height: 420px; z-index: 30; pointer-events: none; }
+.menu.live { pointer-events: auto; }
+.pane { position: absolute; border-radius: 18px; clip-path: inset(100% 0 0 0 round 18px); overflow: hidden; }
+.pane .glare { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, -20%), rgba(255,255,255,.07), transparent 60%); }
+.pane .holo { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(var(--glow), .05) 0 1px, transparent 1px 4px); opacity: 0; }
+.k { font: 500 10px 'IBM Plex Mono'; letter-spacing: .22em; color: rgba(232,238,243,.45); }
+.P1 { left: 0; top: 0; width: 600px; height: 60px; display: flex; align-items: center; gap: 14px; padding: 0 16px; }
+.P1 .av { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); display: grid; place-items: center; font: 500 12px 'Inter Tight'; color: var(--ac); flex: none; }
+.P1 .who { font: 500 14px 'Inter Tight'; white-space: nowrap; } .P1 .who small { display: block; font: 400 11px 'IBM Plex Mono'; color: rgba(232,238,243,.45); }
+.P1 .search { margin-left: auto; width: 320px; height: 36px; border-radius: 10px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; gap: 10px; padding: 0 12px; color: rgba(232,238,243,.45); }
+.P1 .search input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: #e8eef3; font: 400 13px 'Inter Tight'; }
+.P1 .search input::placeholder { color: rgba(232,238,243,.45); }
+.P1 .search kbd { font: 400 10px 'IBM Plex Mono'; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,.12); }
+.P2 { left: 612px; top: 0; width: 288px; height: 60px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 0 12px; }
+.ib { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 17px; color: rgba(232,238,243,.7); border: 1px solid rgba(255,255,255,.07); cursor: pointer; transition: all .2s; }
+.ib:hover { color: #fff; border-color: rgba(var(--glow), .5); box-shadow: 0 0 14px rgba(var(--glow), .25); }
+.ib.pw { color: var(--ac); }
+.allb { margin-right: auto; height: 36px; padding: 0 14px; border-radius: 10px; display: flex; align-items: center; gap: 8px; font: 500 12px 'Inter Tight'; letter-spacing: .04em; color: rgba(232,238,243,.8);
+  border: 1px solid rgba(255,255,255,.08); cursor: pointer; transition: all .2s; white-space: nowrap; }
+.allb i { font-size: 16px; color: var(--ac2); }
+.allb:hover, .allb.on { color: #fff; border-color: rgba(var(--glow), .5); box-shadow: 0 0 14px rgba(var(--glow), .25); background: rgba(var(--glow), .06); }
+/* all apps: A-Z list inside the pinned pane */
+.allapps { display: none; grid-template-columns: 1fr 1fr; grid-auto-rows: max-content; gap: 1px 6px; margin-top: 8px; height: 206px; overflow-y: auto; padding-right: 4px; align-content: start; }
+.allapps::-webkit-scrollbar { width: 4px; } .allapps::-webkit-scrollbar-thumb { background: rgba(var(--glow), .35); border-radius: 2px; }
+.allapps .L { grid-column: 1 / -1; font: 500 10px 'IBM Plex Mono'; letter-spacing: .2em; color: var(--ac2); padding: 8px 4px 3px; border-bottom: 1px solid rgba(var(--glow), .15); }
+.allapps .a { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 7px; font: 400 12px 'Inter Tight'; color: rgba(232,238,243,.85); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid transparent; }
+.allapps .a img { width: 16px; height: 16px; flex: none; }
+.allapps .a:hover { background: rgba(255,255,255,.05); border-color: rgba(var(--glow), .35); }
+.ib.armed { background: #ff2a3d; color: #fff; animation: blink .4s steps(1) infinite; }
+.P3 { left: 0; top: 72px; width: 340px; height: 260px; padding: 16px; }
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
+.tile { height: 48px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; border: 1px solid transparent; transition: all .2s; }
+.tile img { width: 20px; height: 20px; transition: transform .22s cubic-bezier(.2, 1.6, .4, 1); }
+.tile:hover img { transform: scale(1.3); } .tile:active img { transform: scale(1.08); transition-duration: .08s; }
+.tile span { font: 400 9px 'Inter Tight'; color: rgba(232,238,243,.55); max-width: 70px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile:hover { background: rgba(255,255,255,.05); border-color: rgba(var(--glow), .35); }
+.results { display: none; flex-direction: column; gap: 2px; margin-top: 10px; }
+.results div { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; font: 400 13px 'Inter Tight'; cursor: pointer; white-space: nowrap; overflow: hidden; }
+.results div img { width: 18px; height: 18px; }
+.results div:first-child, .results div:hover { background: rgba(var(--glow), .10); }
+.P4 { left: 352px; top: 72px; width: 248px; height: 260px; padding: 16px; display: flex; flex-direction: column; }
+.big { font: 200 64px 'Inter Tight'; letter-spacing: -.04em; line-height: 1; margin-top: 10px; }
+.big b { font-weight: 200; color: var(--ac); text-shadow: 0 0 20px rgba(var(--glow), .45); }
+.date { font: 400 12px 'IBM Plex Mono'; color: rgba(232,238,243,.55); margin-top: 6px; letter-spacing: .08em; }
+.ev { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+.ev div { display: flex; gap: 10px; font: 400 12px 'Inter Tight'; color: rgba(232,238,243,.85); cursor: pointer; white-space: nowrap; overflow: hidden; }
+.ev div:hover { color: #fff; }
+.ev div i { font-style: normal; font: 400 11px 'IBM Plex Mono'; color: var(--ac2); width: 42px; flex: none; }
+.ev div span { overflow: hidden; text-overflow: ellipsis; }
+.P5 { left: 612px; top: 72px; width: 288px; height: 260px; padding: 16px; }
+.proj { margin-top: 12px; display: flex; flex-direction: column; gap: 13px; }
+.proj div { font: 400 13px 'Inter Tight'; cursor: pointer; } .proj div:hover { color: #fff; } .proj div small { float: right; font: 400 11px 'IBM Plex Mono'; color: rgba(232,238,243,.45); }
+.proj div b { display: block; height: 1px; background: rgba(255,255,255,.08); margin-top: 7px; position: relative; }
+.proj div b i { position: absolute; left: 0; top: -1px; height: 3px; background: linear-gradient(90deg, rgba(var(--glow), .2), var(--ac)); box-shadow: 0 0 8px rgba(var(--glow), .8); }
+.P6 { left: 0; top: 344px; width: 900px; height: 76px; display: grid; grid-template-columns: repeat(4, 1fr); }
+.P6 > div { position: relative; padding: 12px 16px; border-right: 1px solid rgba(255,255,255,.05); }
+.P6 > div:last-child { border: none; }
+.P6 canvas { position: absolute; left: 16px; bottom: 10px; width: calc(100% - 32px); height: 34px; }
+.P6 .v { position: absolute; right: 16px; top: 10px; font: 400 12px 'IBM Plex Mono'; color: var(--ac); }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="beam" id="beam"></div>
+  <canvas id="dust" width="1280" height="720"></canvas>
+  <div class="menu" id="menu">
+    <div class="pane smoke P1"><div class="holo"></div><div class="glare"></div><div class="av" id="av">TC</div><div class="who rgb" id="who">TRANSCRYPTO<small>root · TRANSCRYPTO</small></div>
+      <label class="search"><i class="ti ti-search"></i><input id="q" placeholder="Search apps, files, commands" spellcheck="false" autocomplete="off"><kbd>/</kbd></label></div>
+    <div class="pane smoke P2"><div class="holo"></div><div class="glare"></div><div class="allb" id="allBtn"><i class="ti ti-layout-grid"></i><span>All apps</span></div><div class="ib" data-sys="themer" title="TRANSCRYPTO Themer"><i class="ti ti-settings"></i></div><div class="ib" data-sys="lock"><i class="ti ti-lock"></i></div><div class="ib" data-pw="sleep"><i class="ti ti-moon"></i></div><div class="ib pw" data-pw="shutdown"><i class="ti ti-power"></i></div></div>
+    <div class="pane smoke P3"><div class="holo"></div><div class="glare"></div><div class="k" id="pinTitle">PINNED</div><div class="tiles" id="tiles"></div><div class="results" id="results"></div><div class="allapps" id="allapps"></div></div>
+    <div class="pane smoke P4"><div class="holo"></div><div class="glare"></div><div class="k">LOCAL TIME</div><div class="big rgb" id="big">--<b>:</b>--</div><div class="date" id="date"></div><div class="ev" id="ev"></div></div>
+    <div class="pane smoke P5"><div class="holo"></div><div class="glare"></div><div class="k">PROJECTS</div><div class="proj" id="proj"></div></div>
+    <div class="pane smoke P6"><div class="holo"></div><div class="glare"></div>
+      <div><span class="k">CPU</span><span class="v" data-v="0">0%</span><canvas data-g="0"></canvas></div>
+      <div><span class="k" id="gpuK">GPU</span><span class="v" data-v="1">0%</span><canvas data-g="1"></canvas></div>
+      <div><span class="k">MEMORY</span><span class="v" data-v="2">0%</span><canvas data-g="2"></canvas></div>
+      <div><span class="k">NETWORK</span><span class="v" data-v="3">0</span><canvas data-g="3"></canvas></div></div>
+  </div>
+  <svg class="wire" id="wire" viewBox="0 0 900 420"></svg>
+  <div class="scan" id="scan"></div>
+
+  <div class="bar smoke" id="bar"><div class="line" id="line"></div><div class="slit" id="slit"></div>
+    <div class="gear" id="gear"><i class="ti ti-settings"></i></div><span class="sep"></span>
+    <div class="start" id="start"></div>
+    <div id="apps" style="display:contents"></div>
+    <span class="sep"></span>
+    <div class="tray"><i class="ti ti-chevron-up" title="Hidden icons" data-sys="tray"></i><i class="ti ti-wifi" id="tNet" data-sys="quick"></i><i class="ti ti-volume" id="tVol" data-sys="quick"></i><i class="ti ti-battery-3" id="tBat" data-sys="quick"></i></div>
+    <span class="sep"></span><span class="tm" id="tm" data-sys="notify">--:--</span>
+    <div class="quit" id="quit"><i class="ti ti-x"></i></div>
+  </div>
+</div>
+
+<script src="shell.js"></script>
+<script>
+const PAL = { platinum: ['#dff6ff', '#7dd3fc', '125, 211, 252'], solar: ['#ffe7c2', '#f5a524', '245, 165, 36'], rosso: ['#ffd6d6', '#ff3b3b', '255, 59, 59'] };
+(function () { const p = PAL[Shell.palette] || PAL.platinum, s = document.documentElement.style; s.setProperty('--ac', p[0]); s.setProperty('--ac2', p[1]); s.setProperty('--glow', p[2]); })();
+const stage = $('#stage'), menu = $('#menu'); Shell.layoutStage(stage); Shell.backdrop();
+let open = false, busy = false, speed = .4, sfx = Q.get("sfx") !== "0", loop = null, apps = [], appsSig = "";   // speed: every timing is multiplied by this (projection runs in ~1.8 s)
+const M = { x: 190, y: 150, w: 900, h: 420 }, BAR_Y = 676;
+const glow = () => getComputedStyle(document.documentElement).getPropertyValue('--glow').trim();
+
+/* ---------- bar */
+function renderApps(list) {
+  apps = list.slice(0, 26); const box = $('#apps'); box.innerHTML = '';
+  apps.forEach((a, i) => {
+    const el = document.createElement('div'); el.className = 'app' + (a.running ? ' run' : '') + (a.active ? ' act' : ''); el.innerHTML = `<img src="${Shell.icon(a.icon, 64)}" alt="">`;
+    el.onmouseenter = () => Shell.tip.show(el, a.title || a.name); el.onmouseleave = () => Shell.tip.hide();
+    el.onclick = (e) => { Shell.tip.hide(); Shell.launchApp(a, e.shiftKey); };
+    el.onauxclick = (e) => { if (e.button === 1) Shell.launchApp(a, true); };
+    el._app = a; box.append(el);
+  });
+  requestAnimationFrame(relayout);
+}
+Shell.enableAppDrag(() => $$('#apps .app'));
+Shell.refreshRegion = () => { if (!open) Shell.region([$('#bar'), Shell.tip.el && Shell.tip.el.style.display === 'block' ? Shell.tip.el : null]); };
+function relayout() { Shell.metrics($('#bar').getBoundingClientRect().top); Shell.refreshRegion(); }
+function clock() { const t = Shell.time(); $('#tm').textContent = `${t.hh}:${t.mm}`; if (!$('#big').dataset.busy) $('#big').innerHTML = `${t.hh}<b>:</b>${t.mm}`;
+  $('#date').textContent = t.d.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase().replace(/,/g, ' ·'); }
+Shell.on((st) => {
+  const sig = Shell.appsSig(st.apps); if (sig !== appsSig && !open && !busy) { appsSig = sig; renderApps(st.apps); }
+  const s = st.sys; $('#tNet').className = 'ti ' + Shell.netIcon(s); $('#tVol').className = 'ti ' + Shell.volIcon(s);
+  const b = Shell.batIcon(s); $('#tBat').style.display = b ? '' : 'none'; if (b) $('#tBat').className = 'ti ' + b;
+  clock(); if (open) push(s);
+});
+$$('[data-sys]').forEach((el) => el.addEventListener('click', (e) => { e.stopPropagation(); Shell.sys(el.dataset.sys); if (open && el.closest('.menu')) derez(); }));
+$$('[data-pw]').forEach((el) => el.onclick = () => Shell.power(el.dataset.pw, el));
+$('#tVol').addEventListener('wheel', (e) => { e.preventDefault(); Shell.volume(e.deltaY < 0 ? 4 : -4); }, { passive: false });
+$('#tVol').addEventListener('contextmenu', (e) => { e.preventDefault(); Shell.volume('mute'); });
+$('#gear').onclick = () => Shell.sys('themer');
+$('#gear').onmouseenter = () => Shell.tip.show($('#gear'), 'TRANSCRYPTO Themer'); $('#gear').onmouseleave = () => Shell.tip.hide();
+$('#quit').onclick = async () => { const r = await Shell.power('exit', $('#quit')); if (r === 'armed') Shell.tip.show($('#quit'), 'click again to exit TRANSCRYPTO'); };
+$('#quit').onmouseleave = () => Shell.tip.hide();
+
+/* ---------- dust in the beam */
+const ds = $('#dust').getContext('2d'), motes = Array.from({ length: 140 }, () => ({ t: Math.random(), s: Math.random(), v: .002 + Math.random() * .004, r: Math.random() * 1.4 + .3 }));
+let dustOn = false;
+(function dust() { ds.clearRect(0, 0, 1280, 720);
+  if (dustOn) for (const m of motes) { m.t += m.v; if (m.t > 1) { m.t = 0; m.s = Math.random(); }
+    const y = BAR_Y - m.t * (BAR_Y - M.y), half = 20 + m.t * (M.w / 2 - 20), x = 640 + (m.s * 2 - 1) * half;
+    ds.fillStyle = `rgba(${glow()}, ${.55 * (1 - m.t)})`; ds.beginPath(); ds.arc(x, y, m.r, 0, 7); ds.fill(); }
+  requestAnimationFrame(dust); })();
+
+/* ---------- sound */
+function hum(up = true, dur = 1.6) { if (!sfx) return; const c = Shell.ac(), t = c.currentTime;
+  [55, 110.5].forEach((f, i) => { const o = c.createOscillator(), g = c.createGain(); o.type = i ? 'triangle' : 'sine'; o.frequency.setValueAtTime(up ? f * .8 : f, t); o.frequency.linearRampToValueAtTime(up ? f : f * .7, t + dur);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(i ? .03 : .12, t + dur * .3); g.gain.linearRampToValueAtTime(0, t + dur); o.connect(g).connect(c.destination); o.start(t); o.stop(t + dur); }); }
+function whir(up = true, dur = 1.1) { if (!sfx) return; const c = Shell.ac(), t = c.currentTime, n = c.sampleRate * dur, b = c.createBuffer(1, n, c.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+  const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(); s.buffer = b; f.type = 'bandpass'; f.Q.value = 6;
+  f.frequency.setValueAtTime(up ? 400 : 3200, t); f.frequency.exponentialRampToValueAtTime(up ? 3200 : 300, t + dur);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.09, t + .15); g.gain.linearRampToValueAtTime(0, t + dur); s.connect(f).connect(g).connect(c.destination); s.start(t); }
+function blip(f = 3000, v = .02) { if (!sfx) return; const c = Shell.ac(), t = c.currentTime, o = c.createOscillator(), g = c.createGain(); o.type = 'square'; o.frequency.value = f;
+  g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0001, t + .03); o.connect(g).connect(c.destination); o.start(t); o.stop(t + .04); }
+
+const anim = (el, kf, o) => el.animate(kf, Object.assign({ fill: 'both', easing: 'cubic-bezier(.2,.8,.2,1)' }, o, { duration: o.duration * speed, delay: (o.delay || 0) * speed })).finished.catch(() => {});
+const wait = (ms) => new Promise((r) => setTimeout(r, ms * speed));
+const later = (ms, fn) => setTimeout(fn, ms * speed);
+
+const panes = $$('.pane', menu);
+function buildWire() {
+  const svg = $('#wire'); svg.innerHTML = '';
+  for (let x = 0; x <= 900; x += 75) svg.insertAdjacentHTML('beforeend', `<line x1="${x}" y1="0" x2="${x}" y2="420"/>`);
+  for (let y = 0; y <= 420; y += 70) svg.insertAdjacentHTML('beforeend', `<line x1="0" y1="${y}" x2="900" y2="${y}"/>`);
+  panes.forEach((p) => svg.insertAdjacentHTML('beforeend', `<rect x="${p.offsetLeft}" y="${p.offsetTop}" width="${p.offsetWidth}" height="${p.offsetHeight}" rx="18"/>`));
+  $$('rect, line', svg).forEach((e) => { const L = e.getTotalLength(); e.style.strokeDasharray = e.tagName === 'line' ? '2 6' : L; e.style.strokeDashoffset = e.tagName === 'line' ? 0 : L; });
+}
+buildWire();
+function rgb(el, dur = 700) { anim(el, [{ textShadow: `4px 0 rgba(255,40,90,.85), -4px 0 rgba(0,255,240,.85)` }, { textShadow: `-2px 0 rgba(255,40,90,.6), 2px 0 rgba(0,255,240,.6)`, offset: .5 }, { textShadow: '0 0 transparent' }], { duration: dur, easing: 'steps(6)' }); }
+function scramble(el, dur = 600) { el.dataset.busy = 1; const t0 = performance.now();
+  (function f(now) { const p = (now - t0) / (dur * speed); if (p < 1) { el.textContent = Math.floor(Math.random() * 90 + 10) + ':' + Math.floor(Math.random() * 90 + 10); requestAnimationFrame(f); } else { delete el.dataset.busy; clock(); } })(t0); }
+
+/* ---------- live sparklines from the engine's numbers */
+const series = [0, 1, 2, 3].map(() => Array(40).fill(0));
+function push(s) {
+  const gpu = s.gpu >= 0; $('#gpuK').textContent = gpu ? 'GPU' : 'DISK';
+  const vals = [s.cpu / 100, (gpu ? s.gpu : s.disk) / 100, s.ram / 100, Math.min(1, s.down / 1048576 / 4)];
+  vals.forEach((v, i) => { series[i].shift(); series[i].push(Math.max(.02, Math.min(.98, v))); });
+  $('[data-v="0"]').textContent = Math.round(s.cpu) + '%'; $('[data-v="1"]').textContent = Math.round(gpu ? s.gpu : s.disk) + '%';
+  $('[data-v="2"]').textContent = Math.round(s.ram) + '%'; $('[data-v="3"]').textContent = Shell.rate(s.down);
+  graphs();
+}
+function graphs() {
+  series.forEach((s, i) => { const cv = $(`[data-g="${i}"]`), w = cv.width = cv.offsetWidth, h = 34; cv.height = h; const g = cv.getContext('2d');
+    g.clearRect(0, 0, w, h); g.beginPath(); s.forEach((v, j) => { const x = j / (s.length - 1) * w, y = h - v * h; j ? g.lineTo(x, y) : g.moveTo(x, y); });
+    g.strokeStyle = `rgba(${glow()}, .95)`; g.lineWidth = 1.4; g.shadowColor = `rgba(${glow()}, .9)`; g.shadowBlur = 6; g.stroke();
+    g.lineTo(w, h); g.lineTo(0, h); g.closePath(); const fg = g.createLinearGradient(0, 0, 0, h); fg.addColorStop(0, `rgba(${glow()}, .25)`); fg.addColorStop(1, `rgba(${glow()}, 0)`); g.shadowBlur = 0; g.fillStyle = fg; g.fill(); });
+}
+
+/* ---------- menu content */
+function fillMenu() {
+  const st = Shell.start || {}, sys = (Shell.state && Shell.state.sys) || {}, user = sys.user || 'user';
+  $('#av').textContent = Shell.initials(user);
+  $('#who').innerHTML = `${Shell.esc(user)}<small>${(Shell.state ? Shell.state.apps.filter((a) => a.running).length : 0)} apps running · TRANSCRYPTO</small>`;
+  $('#tiles').innerHTML = (st.pins || []).slice(0, 16).map((p) => `<div class="tile" data-p="${Shell.esc(p.path)}"><img src="${Shell.icon(p.icon, 64)}" alt=""><span>${Shell.esc(p.name)}</span></div>`).join('');
+  $$('#tiles .tile').forEach((t) => t.onclick = () => Shell.open$(t.dataset.p));
+  const today = new Date().toDateString();
+  $('#ev').innerHTML = (st.recentFiles || []).slice(0, 3).map((f) => { const d = new Date(f.when);
+    return `<div data-p="${Shell.esc(f.path)}"><i>${d.toDateString() === today ? d.toTimeString().slice(0, 5) : d.toDateString().slice(4, 10)}</i><span>${Shell.esc(f.name)}</span></div>`; }).join('');
+  $('#proj').innerHTML = Shell.projects().map((p) => { const pct = p.when ? Math.max(6, Math.round(100 - (Date.now() - new Date(p.when)) / 864e5 * 10)) : 50;
+    return `<div data-p="${Shell.esc(p.path)}">${Shell.esc(p.name)}<small>${p.when ? Shell.ago(p.when) : ''}</small><b><i style="width:${pct}%"></i></b></div>`; }).join('');
+  $$('#ev div, #proj div').forEach((d) => d.onclick = () => Shell.open$(d.dataset.p));
+}
+$('#q').addEventListener('input', () => {
+  const res = Shell.search($('#q').value), has = $('#q').value.trim() !== '';
+  $('#tiles').style.display = has ? 'none' : ''; $('#results').style.display = has ? 'flex' : 'none'; $('#pinTitle').textContent = has ? `RESULTS · ${res.length}` : 'PINNED';
+  $('#results').innerHTML = res.slice(0, 8).map((a) => `<div data-p="${Shell.esc(a.path)}"><img src="${Shell.icon(a.icon, 32)}" alt="">${Shell.esc(a.name)}</div>`).join('');
+  $$('#results div').forEach((d) => d.onclick = () => Shell.open$(d.dataset.p));
+});
+/* all apps: every Start menu shortcut, A-Z with letter headers, in place of the pinned tiles */
+let allOn = false;
+const showAll = (on) => {
+  allOn = on; $('#allBtn').classList.toggle('on', on); $('#allBtn span').textContent = on ? 'Pinned' : 'All apps';
+  $('#allapps').style.display = on ? 'grid' : 'none'; $('#tiles').style.display = on ? 'none' : ''; $('#results').style.display = 'none';
+  const apps = ((Shell.start && Shell.start.apps) || []).slice().sort((a, b) => a.name.localeCompare(b.name));
+  $('#pinTitle').textContent = on ? `ALL APPS · ${apps.length}` : 'PINNED';
+  if (!on) return;
+  let h = '', last = '';
+  for (const a of apps) { const c = /[a-z]/i.test(a.name[0]) ? a.name[0].toUpperCase() : '#'; if (c !== last) { h += `<div class="L">${c}</div>`; last = c; }
+    h += `<div class="a" data-p="${Shell.esc(a.path)}" title="${Shell.esc(a.name)}"><img src="${Shell.icon(a.icon, 32)}" alt="" loading="lazy">${Shell.esc(a.name)}</div>`; }
+  $('#allapps').innerHTML = h; $('#allapps').scrollTop = 0;
+  $$('#allapps .a').forEach((d) => d.onclick = () => Shell.open$(d.dataset.p));
+};
+$('#allBtn').onclick = (e) => { e.stopPropagation(); if ($('#q').value) { $('#q').value = ''; } showAll(!allOn); };
+$('#q').addEventListener('input', () => { if (allOn) { allOn = false; $('#allBtn').classList.remove('on'); $('#allBtn span').textContent = 'All apps'; $('#allapps').style.display = 'none'; } });
+$('#q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { const f = $('#results div'); if (f) f.click(); } });
+document.addEventListener('mousedown', (e) => { if (open && !busy && !e.target.closest('.menu, .bar, .tcCtx')) derez(); });
+
+/* ---------- projection */
+async function project() {
+  busy = true; Shell.busy = true; Shell.tip.hide();
+  await Promise.all([Shell.act('menu', { open: 1 }), Shell.start ? null : Shell.loadStart()]);
+  await Shell.useScreenshot(true);
+  Shell.ac().resume?.(); $('#start').classList.add('on'); fillMenu(); $('#q').value = ''; showAll(false); $('#tiles').style.display = ''; $('#results').style.display = 'none'; $('#pinTitle').textContent = 'PINNED';
+  hum(true); anim($('#line'), [{ width: '0px', opacity: 1 }, { width: $('#bar').offsetWidth + 'px', opacity: 1 }], { duration: 600, easing: 'cubic-bezier(.7,0,.2,1)' });
+  await wait(450);
+  whir(true); anim($('#slit'), [{ width: '0px' }, { width: '46px' }], { duration: 300 });
+  anim($('#beam'), [{ opacity: 0, clipPath: 'polygon(620px 676px, 660px 676px, 660px 676px, 620px 676px)' }, { opacity: 1, clipPath: 'polygon(620px 676px, 660px 676px, 1090px 150px, 190px 150px)' }], { duration: 650, delay: 120, easing: 'cubic-bezier(.3,0,.1,1)' });
+  later(200, () => { dustOn = true; anim($('#dust'), [{ opacity: 0 }, { opacity: 1 }], { duration: 400 }); });
+  await wait(620);
+  $$('#wire rect').forEach((r, i) => { anim(r, [{ strokeDashoffset: r.getTotalLength() }, { strokeDashoffset: 0 }], { duration: 650, delay: i * 70, easing: 'cubic-bezier(.6,0,.3,1)' }); later(i * 70, () => blip(2400 + i * 260, .015)); });
+  anim($('#wire'), [{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
+  await wait(800);
+  const D = 1100;
+  anim($('#scan'), [{ top: M.y + M.h + 'px', opacity: 1 }, { top: M.y - 2 + 'px', opacity: 1, offset: .97 }, { top: M.y - 2 + 'px', opacity: 0 }], { duration: D, easing: 'linear' });
+  panes.forEach((p) => {
+    const top = p.offsetTop, bot = top + p.offsetHeight, start = (M.h - bot) / M.h * D, dur = (bot - top) / M.h * D;
+    anim(p, [{ clipPath: 'inset(100% 0 0 0 round 18px)' }, { clipPath: 'inset(0 0 0 0 round 18px)' }], { duration: dur, delay: start, easing: 'linear' });
+    anim(p, [{ opacity: .35 }, { opacity: 1, offset: .2 }, { opacity: .6, offset: .35 }, { opacity: 1, offset: .5 }, { opacity: .85, offset: .7 }, { opacity: 1 }], { duration: dur + 300, delay: start, easing: 'steps(8)' });
+    anim(p.querySelector('.holo'), [{ opacity: 1 }, { opacity: 0 }], { duration: 900, delay: start + dur });
+    later(start, () => blip(1800 + bot * 4, .02));
+  });
+  later(D * .45, () => { rgb($('#who')); rgb($('#big'), 900); scramble($('#big'), 700); });
+  if (Shell.state) push(Shell.state.sys);
+  await wait(D + 100);
+  hum(false, 1.2);
+  anim($('#wire'), [{ opacity: 1 }, { opacity: 0 }], { duration: 500 });
+  anim($('#beam'), [{ opacity: 1 }, { opacity: 0 }], { duration: 700 });
+  anim($('#dust'), [{ opacity: 1 }, { opacity: 0 }], { duration: 700 }); later(700, () => dustOn = false);
+  anim($('#slit'), [{ width: '46px' }, { width: '0px' }], { duration: 400, delay: 300 });
+  $$('.proj i').forEach((b, i) => anim(b, [{ width: '0%' }, { width: b.style.width }], { duration: 900, delay: i * 80 }));
+  await wait(500);
+  menu.classList.add('live');
+  stage.onmousemove = (e) => { const r = stage.getBoundingClientRect(), k = Shell.K || 1, x = (e.clientX - r.left) / k, y = (e.clientY - r.top) / k;
+    panes.forEach((p) => { p.style.setProperty('--gx', x - M.x - p.offsetLeft + 'px'); p.style.setProperty('--gy', y - M.y - p.offsetTop + 'px'); }); };
+  open = true; Shell.open = true; busy = false; Shell.busy = false;
+  setTimeout(() => $('#q').focus(), 50);
+}
+
+async function derez() {
+  if (!open || busy) return;
+  busy = true; Shell.busy = true; menu.classList.remove('live'); stage.onmousemove = null; $('#q').blur(); Shell.tip.hide();
+  whir(false, 1); $('#slit').getAnimations().forEach((a) => a.cancel());
+  anim($('#slit'), [{ width: '0px' }, { width: '46px' }], { duration: 250 });
+  dustOn = true; anim($('#dust'), [{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+  anim($('#beam'), [{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+  anim($('#wire'), [{ opacity: 0 }, { opacity: 1 }], { duration: 250 });
+  const D = 900;
+  anim($('#scan'), [{ top: M.y - 2 + 'px', opacity: 1 }, { top: M.y + M.h + 'px', opacity: 1, offset: .97 }, { top: M.y + M.h + 'px', opacity: 0 }], { duration: D, delay: 150, easing: 'linear' });
+  panes.forEach((p) => { const top = p.offsetTop, bot = top + p.offsetHeight, start = 150 + top / M.h * D, dur = (bot - top) / M.h * D;
+    anim(p, [{ clipPath: 'inset(0 0 0 0 round 18px)', opacity: 1 }, { clipPath: 'inset(100% 0 0 0 round 18px)', opacity: .4 }], { duration: dur, delay: start, easing: 'linear' });
+    later(start, () => blip(3200 - top * 3, .015)); });
+  await wait(D + 200);
+  hum(false, 1);
+  $$('#wire rect').forEach((r, i) => anim(r, [{ strokeDashoffset: 0 }, { strokeDashoffset: -r.getTotalLength() }], { duration: 450, delay: i * 40 }));
+  anim($('#wire'), [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(160px) scale(.05)', transformOrigin: '50% 100%' }], { duration: 600, delay: 200, easing: 'cubic-bezier(.6,0,.8,.3)' });
+  anim($('#beam'), [{ opacity: 1, clipPath: 'polygon(620px 676px, 660px 676px, 1090px 150px, 190px 150px)' }, { opacity: 0, clipPath: 'polygon(620px 676px, 660px 676px, 660px 676px, 620px 676px)' }], { duration: 600, delay: 250, easing: 'cubic-bezier(.6,0,.8,.3)' });
+  anim($('#dust'), [{ opacity: 1 }, { opacity: 0 }], { duration: 500, delay: 300 });
+  anim($('#slit'), [{ width: '46px' }, { width: '0px' }], { duration: 300, delay: 700 });
+  anim($('#line'), [{ width: $('#bar').offsetWidth + 'px', opacity: 1 }, { width: '0px', opacity: 0 }], { duration: 500, delay: 800 });
+  await wait(1350);
+  dustOn = false; $('#start').classList.remove('on');
+  stage.getAnimations({ subtree: true }).forEach((a) => { if (!(a instanceof CSSAnimation)) a.cancel(); });
+  buildWire();
+  open = false; Shell.open = false;
+  await Shell.useScreenshot(false);
+  await Shell.act('menu', { open: 0 });
+  busy = false; Shell.busy = false;
+  if (Shell.state) { appsSig = Shell.appsSig(Shell.state.apps); renderApps(Shell.state.apps); }
+  Shell.scheduleHide(1200);
+}
+
+$('#start').onclick = () => { if (busy) return; open ? derez() : project(); };
+Shell.onStart = () => { if (busy) return; open ? derez() : project(); };
+Shell.onEscape = () => derez(); Shell.onBlur = () => derez(); Shell.close = () => derez();
+Shell.poll(); Shell.loadStart(); clock();
+setInterval(() => { if (!open && !Shell.hidden) relayout(); }, 5000);
+setTimeout(() => Shell.setupAutohide(stage), 1200);
+</script>
+</body>
+</html>

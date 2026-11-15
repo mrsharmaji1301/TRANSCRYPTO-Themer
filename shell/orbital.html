@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TRANSCRYPTO Shell - Orbital</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root { --g1: #7f5af0; --g2: #ff6ec7; --g3: #ffb86b; --deep: #0b0820; }
+* { box-sizing: border-box; margin: 0; }
+html { background: #0b0820; }
+html, body { width: 100vw; height: 100vh; overflow: hidden; color: #f4f1ff; font-family: Outfit, sans-serif; user-select: none; }
+body { background: transparent; }
+.stage { position: absolute; width: 1280px; height: 720px; perspective: 1400px; }
+.tcTip { position: fixed; z-index: 100; display: none; font: 600 11px 'Space Grotesk'; padding: 3px 10px; border-radius: 99px; background: rgba(12,8,30,.92); border: 1px solid rgba(255,255,255,.18); color: #fff; white-space: nowrap; pointer-events: none; }
+
+/* liquid layer */
+.goo { position: absolute; inset: 0; filter: url(#goo); z-index: 20; pointer-events: none; }
+.pill { position: absolute; top: 672px; height: 52px; border-radius: 26px 26px 0 0; background: linear-gradient(90deg, #2c1a63, #1c1240 50%, #451a52); }
+.blob { position: absolute; border-radius: 50%; }
+.core { left: 616px; top: 674px; width: 48px; height: 48px; background: conic-gradient(from 0deg, var(--g1), var(--g2), var(--g3), var(--g1)); animation: swirl 6s linear infinite; }
+@keyframes swirl { to { filter: hue-rotate(40deg); } }
+.drop { width: 38px; height: 38px; background: linear-gradient(135deg, #34206e, #4a1d5a); }
+
+/* crisp layer */
+.pillEdge { position: absolute; top: 672px; height: 52px; border-radius: 26px 26px 0 0; z-index: 21; pointer-events: none;
+  padding: 1.5px; background: linear-gradient(90deg, var(--g1), var(--g2), var(--g3)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; box-shadow: 0 10px 40px -10px var(--g2); }
+.ico { position: absolute; width: 38px; height: 38px; display: grid; place-items: center; z-index: 30; border-radius: 50%; cursor: pointer; transition: transform .2s; }
+.ico img { width: 22px; height: 22px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.5)); }
+.ico.big img { width: 26px; height: 26px; }
+.ico:hover { transform: scale(1.18); }
+.ico.run::after { content: ""; position: absolute; bottom: 1px; width: 5px; height: 5px; border-radius: 50%; background: linear-gradient(var(--g2), var(--g3)); box-shadow: 0 0 8px var(--g2); }
+.ico.act::after { width: 14px; border-radius: 3px; }
+.coreIco { position: absolute; left: 616px; top: 674px; width: 48px; height: 48px; z-index: 31; display: grid; place-items: center; cursor: pointer; border-radius: 50%; }
+.coreIco b { font: 800 15px Outfit; color: #14081f; letter-spacing: -.02em; }
+.coreIco::before { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.35); animation: breathe 2.4s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: scale(1.12); opacity: .3; } }
+.dock { position: absolute; top: 676px; height: 44px; display: flex; align-items: center; gap: 13px; padding: 0 16px; border-radius: 20px 20px 0 0; border-bottom: none; z-index: 30;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); backdrop-filter: blur(16px) saturate(160%); font-size: 16px; color: #e9e4ff; }
+.dock i { cursor: pointer; } .dock i:hover { color: var(--g3); }
+.dock .time { font: 700 14px Outfit; background: linear-gradient(90deg, var(--g2), var(--g3)); -webkit-background-clip: text; color: transparent; cursor: pointer; }
+.gear { position: absolute; top: 684px; width: 28px; height: 28px; display: grid; place-items: center; z-index: 30; cursor: pointer; color: #e9e4ff; font-size: 17px; opacity: 0; transition: opacity .2s, transform .3s; border-radius: 50%; }
+.gear:hover { opacity: 1; transform: rotate(60deg); filter: drop-shadow(0 0 6px var(--g2)); }
+.dock .sepd { width: 1px; height: 18px; background: rgba(255,255,255,.18); margin: 0 -3px; }
+.dock .quit { color: #ff2a3d; font-size: 17px; opacity: .55; transition: opacity .2s, transform .2s, filter .2s; filter: drop-shadow(0 0 3px rgba(255,42,61,.7)); }
+.dock .quit:hover { color: #ff2a3d; opacity: 1; transform: scale(1.18); filter: drop-shadow(0 0 4px #ff2a3d) drop-shadow(0 0 10px rgba(255,42,61,.8)); }
+.dock .quit.armed { opacity: 1; animation: blink .4s steps(1) infinite; }
+@keyframes redglow { 50% { filter: drop-shadow(0 0 2px #ff2a3d) drop-shadow(0 0 16px #ff2a3d); } }
+@keyframes blink { 50% { opacity: .4; } }
+
+/* start experience */
+.orbit { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; z-index: 15; pointer-events: none; overflow: visible; opacity: 0; }
+.orbit circle { fill: none; stroke: url(#og); stroke-width: 1.5; }
+.orbit .dash { stroke-dasharray: 2 10; opacity: .5; }
+.clock { position: absolute; left: 0; right: 0; top: 14px; text-align: center; z-index: 25; opacity: 0; pointer-events: none; }
+.clock .big { font: 800 84px Outfit; letter-spacing: -.04em; line-height: 1; background: linear-gradient(90deg, var(--g1), var(--g2), var(--g3)); -webkit-background-clip: text; color: transparent; }
+.clock .sm { font: 500 14px 'Space Grotesk'; color: rgba(255,255,255,.75); letter-spacing: .3em; }
+.search { position: absolute; left: 640px; top: 128px; width: 460px; height: 46px; margin-left: -230px; border-radius: 23px; z-index: 26; opacity: 0; display: flex; align-items: center; gap: 10px; padding: 0 18px;
+  background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(18px) saturate(160%); }
+.search i { font-size: 18px; color: var(--g2); }
+.search input { flex: 1; background: none; border: none; outline: none; color: #fff; font: 400 15px 'Space Grotesk'; }
+.search input::placeholder { color: rgba(255,255,255,.6); }
+.results { position: absolute; left: 640px; top: 182px; width: 460px; margin-left: -230px; z-index: 27; display: none; flex-direction: column; padding: 6px; border-radius: 18px;
+  background: rgba(20,12,40,.82); border: 1px solid rgba(255,255,255,.16); backdrop-filter: blur(20px); }
+.results div { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 12px; font: 400 14px 'Space Grotesk'; cursor: pointer; }
+.results div img { width: 20px; height: 20px; }
+.results div:first-child, .results div:hover { background: linear-gradient(90deg, color-mix(in srgb, var(--g1) 40%, transparent), color-mix(in srgb, var(--g2) 25%, transparent)); }
+.card { position: absolute; width: 262px; height: 74px; border-radius: 18px; z-index: 25; opacity: 0; padding: 12px 14px; cursor: pointer; overflow: hidden; will-change: transform, opacity;
+  background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.06)); border: 1px solid rgba(255,255,255,.2); }
+.card.glass { backdrop-filter: blur(18px) saturate(150%); }
+.stackT { position: absolute; z-index: 25; opacity: 0; font: 600 10px 'Space Grotesk'; letter-spacing: .24em; color: rgba(255,255,255,.6); }
+.card.file { display: flex; align-items: center; gap: 12px; }
+.card.file img { width: 34px; height: 34px; flex: none; position: relative; filter: drop-shadow(0 3px 8px rgba(0,0,0,.35)); }
+.card.file .tx { min-width: 0; position: relative; }
+.card.stat .row { display: flex; align-items: baseline; justify-content: space-between; position: relative; }
+.card.stat b { font: 800 20px Outfit; letter-spacing: -.02em; }
+.card.stat .sub { font: 400 11px 'Space Grotesk'; color: rgba(255,255,255,.65); margin-top: 1px; position: relative; }
+.card::before { content: ""; position: absolute; width: 130px; height: 130px; border-radius: 50%; right: -46px; top: -64px; background: radial-gradient(circle, var(--c), transparent 70%); opacity: .8; }
+.card small { font: 600 11px 'Space Grotesk'; letter-spacing: .2em; color: rgba(255,255,255,.65); }
+.card h3 { font: 700 15px Outfit; margin-top: 2px; position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card p { font: 400 11px 'Space Grotesk'; color: rgba(255,255,255,.7); margin-top: 2px; position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .bar2 { position: absolute; left: 14px; right: 14px; bottom: 11px; height: 5px; border-radius: 4px; background: rgba(255,255,255,.12); }
+.card .bar2 i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--g1), var(--g2), var(--g3)); transition: width .8s cubic-bezier(.2,.8,.2,1); box-shadow: 0 0 8px color-mix(in srgb, var(--g2) 60%, transparent); }
+.card:hover { border-color: rgba(255,255,255,.45); }
+.bub { position: absolute; width: 54px; height: 54px; border-radius: 50%; z-index: 28; opacity: 0; display: grid; place-items: center; font-size: 22px; cursor: pointer;
+  background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.06)); border: 1px solid rgba(255,255,255,.28); backdrop-filter: blur(10px); color: #fff; }
+.bub.up span { bottom: auto; top: -20px; }
+.allp { position: absolute; left: 640px; top: 418px; width: 420px; height: 440px; margin: -220px 0 0 -210px; z-index: 36; border-radius: 26px; display: none; flex-direction: column; padding: 14px 14px 10px;
+  background: linear-gradient(160deg, rgba(40,20,80,.86), rgba(20,10,44,.9)); border: 1px solid rgba(255,255,255,.22); box-shadow: 0 30px 90px rgba(0,0,0,.55), 0 0 40px color-mix(in srgb, var(--g2) 25%, transparent); }
+.allp.on { display: flex; animation: allIn .32s cubic-bezier(.2,.9,.25,1.15) both; }
+@keyframes allIn { from { opacity: 0; transform: scale(.86); } to { opacity: 1; transform: none; } }
+.allp .hd { display: flex; align-items: center; gap: 10px; font: 700 12px 'Space Grotesk'; letter-spacing: .2em; color: #fff; }
+.allp .hd span { color: rgba(255,255,255,.55); font-weight: 500; letter-spacing: .05em; }
+.allp .hd input { margin-left: auto; width: 140px; height: 28px; border-radius: 14px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: #fff; padding: 0 12px; font: 500 12px Outfit; outline: none; }
+.allp .hd i { cursor: pointer; font-size: 18px; color: rgba(255,255,255,.75); } .allp .hd i:hover { color: #fff; }
+.allp .list { flex: 1; min-height: 0; overflow-y: auto; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: max-content; gap: 2px 8px; align-content: start; padding-right: 4px; }
+.allp .list::-webkit-scrollbar { width: 4px; } .allp .list::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--g2) 60%, transparent); border-radius: 2px; }
+.allp .L { grid-column: 1 / -1; font: 700 11px 'Space Grotesk'; letter-spacing: .22em; padding: 8px 6px 3px; background: linear-gradient(90deg, var(--g2), var(--g3)); -webkit-background-clip: text; color: transparent; }
+.allp .a { display: flex; align-items: center; gap: 9px; padding: 6px 8px; border-radius: 10px; font: 500 12.5px Outfit; color: #f4f1ff; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.allp .a img { width: 18px; height: 18px; flex: none; }
+.allp .a:hover { background: linear-gradient(90deg, color-mix(in srgb, var(--g1) 45%, transparent), color-mix(in srgb, var(--g2) 25%, transparent)); }
+.bub span { position: absolute; bottom: -20px; font: 600 10px 'Space Grotesk'; letter-spacing: .15em; color: rgba(255,255,255,.7); }
+.bub:hover { background: linear-gradient(135deg, var(--g1), var(--g2)); }
+.bub.armed { background: linear-gradient(135deg, #ff2a3d, var(--g2)); animation: blink .4s steps(1) infinite; }
+.halo { position: absolute; border-radius: 50%; z-index: 14; pointer-events: none; opacity: 0; background: radial-gradient(circle, color-mix(in srgb, var(--g2) 45%, transparent), transparent 65%); }
+.particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; z-index: 40; pointer-events: none; }
+.oi { position: absolute; width: 46px; height: 46px; display: grid; place-items: center; z-index: 30; border-radius: 50%; cursor: pointer; pointer-events: none; }
+.oi img { width: 26px; height: 26px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.5)); }
+.oi.live { pointer-events: auto; }
+.oi img { transition: transform .22s cubic-bezier(.2, 1.6, .4, 1), filter .22s; }
+.oi.live:hover img { transform: scale(1.38); filter: drop-shadow(0 4px 10px rgba(0,0,0,.55)) drop-shadow(0 0 10px rgba(255,255,255,.35)); }
+.oi.live:active img { transform: scale(1.12); transition-duration: .08s; }
+.od { position: absolute; width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #3a2478, #5a1f66); }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b"/><feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" result="g"/><feComposite in="SourceGraphic" in2="g" operator="atop"/></filter>
+</svg>
+<div class="stage" id="stage">
+  <svg class="orbit" id="orbit">
+    <defs><linearGradient id="og" x1="0" x2="1"><stop offset="0" style="stop-color:var(--g1)"/><stop offset=".5" style="stop-color:var(--g2)"/><stop offset="1" style="stop-color:var(--g3)"/></linearGradient></defs>
+    <circle id="ring1" cx="640" cy="418" r="178"/>
+    <circle class="dash" cx="640" cy="418" r="222"/>
+    <circle class="dash" cx="640" cy="418" r="118"/>
+  </svg>
+  <div class="halo" id="halo" style="left:390px;top:168px;width:500px;height:500px"></div>
+  <div class="clock" id="clock"><div class="big" id="bigT">--:--</div><div class="sm" id="bigD"></div></div>
+  <label class="search" id="search"><i class="ti ti-sparkles"></i><input id="q" placeholder="Ask, search or launch anything" spellcheck="false" autocomplete="off"></label>
+  <div class="results" id="results"></div>
+  <div class="stackT" style="left:58px;top:228px">RECENT FILES</div>
+  <div class="card file" style="left:52px;top:248px;--c:var(--g1)"></div>
+  <div class="card file" style="left:52px;top:332px;--c:var(--g2)"></div>
+  <div class="card file" style="left:52px;top:416px;--c:var(--g3)"></div>
+  <div class="card file" style="left:52px;top:500px;--c:var(--g1)"></div>
+  <div class="stackT" style="left:972px;top:228px">THIS PC · LIVE</div>
+  <div class="card stat" data-k="cpu" style="left:966px;top:248px;--c:var(--g1)"><div class="row"><small>CPU</small><b>--</b></div><div class="sub">processor load</div><div class="bar2"><i style="width:0%"></i></div></div>
+  <div class="card stat" data-k="gpu" style="left:966px;top:332px;--c:var(--g2)"><div class="row"><small>GPU</small><b>--</b></div><div class="sub">3D engine</div><div class="bar2"><i style="width:0%"></i></div></div>
+  <div class="card stat" data-k="ram" style="left:966px;top:416px;--c:var(--g3)"><div class="row"><small>RAM</small><b>--</b></div><div class="sub">memory in use</div><div class="bar2"><i style="width:0%"></i></div></div>
+  <div class="card stat" data-k="net" style="left:966px;top:500px;--c:var(--g2)"><div class="row"><small>NETWORK</small><b>--</b></div><div class="sub">↑ --</div><div class="bar2"><i style="width:0%"></i></div></div>
+  <div class="bub up" data-a="270" data-n="allapps"><i class="ti ti-layout-grid"></i><span>ALL APPS</span></div>
+  <div class="allp" id="allp"><div class="hd"><b>ALL APPS</b><span id="allN"></span><input id="allQ" placeholder="filter" spellcheck="false" autocomplete="off"><i class="ti ti-x" id="allX"></i></div><div class="list" id="allL"></div></div>
+  <div class="bub" data-a="145" data-n="lock"><i class="ti ti-lock"></i><span>LOCK</span></div>
+  <div class="bub" data-a="110" data-n="themer"><i class="ti ti-settings"></i><span>THEMER</span></div>
+  <div class="bub" data-a="70" data-n="sleep" data-pw="1"><i class="ti ti-moon"></i><span>SLEEP</span></div>
+  <div class="bub" data-a="35" data-n="shutdown" data-pw="1"><i class="ti ti-power"></i><span>POWER</span></div>
+
+  <div class="goo" id="goo"><div class="pill" id="pill"></div><div class="blob core" id="core"></div></div>
+  <div class="pillEdge" id="pillEdge"></div>
+  <div id="bar"></div>
+  <div class="coreIco" id="coreIco"><b id="coreTxt">TC</b></div>
+  <div class="gear" id="gear"><i class="ti ti-settings"></i></div>
+  <div class="dock" id="dock"><i class="ti ti-chevron-up" title="Hidden icons" data-sys="tray"></i><i class="ti ti-wifi" id="tNet" data-sys="quick"></i><i class="ti ti-volume" id="tVol" data-sys="quick"></i><i class="ti ti-battery-3" id="tBat" data-sys="quick"></i><span class="time" id="t" data-sys="notify">--:--</span><span class="sepd"></span><i class="ti ti-x quit" id="quit" title="Exit TRANSCRYPTO (double click)"></i></div>
+</div>
+
+<script src="shell.js"></script>
+<script>
+const P = { aurora: ['#7f5af0', '#ff6ec7', '#ffb86b'], lagoon: ['#00c6ff', '#38f9d7', '#d4ff4f'], ember: ['#ff3d71', '#ff8a00', '#ffe066'] };
+(function () { const p = P[Shell.palette] || P.aurora, s = document.documentElement.style; s.setProperty('--g1', p[0]); s.setProperty('--g2', p[1]); s.setProperty('--g3', p[2]); })();
+const stage = $('#stage'); Shell.layoutStage(stage); Shell.backdrop();
+let open = false, busy = false, speed = 1, sfx = Q.get('sfx') !== '0', spin = null, spinA = 0, hovering = false, apps = [], appsSig = '', bar = [], orbs = [];
+const C = { x: 640, y: 418 }, BY = 698, ST = 46, R1 = 178, R2 = 222, RB = 118, LIFT = C.y - BY;   // LIFT: core travel from the bar to the ring centre
+
+Shell.enableAppDrag(() => bar.map((b) => b.ic));
+/* ---------- bar: apps split left and right of the core */
+function renderBar(list) {
+  apps = list.slice(0, 24);   // the bar grows with the running apps
+  bar.forEach((b) => { b.d.remove(); b.ic.remove(); }); bar = [];
+  const half = Math.ceil(apps.length / 2);
+  apps.forEach((a, i) => {
+    const side = i < half ? -1 : 1, k = i < half ? half - 1 - i : i - half, x = 640 + side * (52 + k * ST);
+    const d = document.createElement('div'); d.className = 'blob drop'; $('#goo').append(d);
+    const ic = document.createElement('div'); ic.className = 'ico' + (a.running ? ' run' : '') + (a.active ? ' act' : ''); ic.innerHTML = `<img src="${Shell.icon(a.icon, 64)}" alt="">`;
+    ic.onmouseenter = () => { if (!busy) { Shell.tip.show(ic, a.title || a.name); chime(880 + i * 40, .02); } }; ic.onmouseleave = () => Shell.tip.hide();
+    ic.onclick = (e) => { Shell.tip.hide(); Shell.launchApp(a, e.shiftKey); };
+    ic.onauxclick = (e) => { if (e.button === 1) Shell.launchApp(a, true); };
+    ic._app = a; stage.append(ic);
+    for (const el of [d, ic]) { el.style.left = x - 19 + 'px'; el.style.top = BY - 19 + 'px'; }
+    bar.push({ d, ic, x, a });
+  });
+  const w = Math.max(160, 2 * (52 + Math.max(0, half - 1) * ST) + 60);
+  for (const el of [$('#pill'), $('#pillEdge')]) { el.style.width = w + 'px'; el.style.left = 640 - w / 2 + 'px'; }
+  $('#gear').style.left = 640 - w / 2 - 36 + 'px';
+  const dl = 640 + w / 2 + 18; $('#dock').style.left = dl + 'px';
+  requestAnimationFrame(relayout);
+}
+Shell.refreshRegion = () => { if (!open) Shell.region([$('#pillEdge'), $('#dock'), $('#gear'), $('#quit'), Shell.tip.el && Shell.tip.el.style.display === 'block' ? Shell.tip.el : null]); };
+function relayout() { Shell.metrics($('#pillEdge').getBoundingClientRect().top); Shell.refreshRegion(); }
+function tray(s) {
+  $('#tNet').className = 'ti ' + Shell.netIcon(s); $('#tVol').className = 'ti ' + Shell.volIcon(s);
+  const b = Shell.batIcon(s); $('#tBat').style.display = b ? '' : 'none'; if (b) $('#tBat').className = 'ti ' + b;
+  const t = Shell.time(); $('#t').textContent = `${t.hh}:${t.mm}`; $('#bigT').textContent = `${t.hh}:${t.mm}`;
+  $('#bigD').textContent = t.d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase().replace(',', ' ·');
+}
+Shell.on((st) => { const ini = Shell.initials(st.sys && st.sys.user); if ($('#coreTxt').textContent !== ini) $('#coreTxt').textContent = ini; });   // the signed-in user's initials in the core
+Shell.on((st) => { const sig = Shell.appsSig(st.apps); if (sig !== appsSig && !open && !busy) { appsSig = sig; renderBar(st.apps); } tray(st.sys); if (open || busy) stats(st.sys); });
+$$('[data-sys]').forEach((el) => el.addEventListener('click', (e) => { e.stopPropagation(); Shell.sys(el.dataset.sys); }));
+$('#tVol').addEventListener('wheel', (e) => { e.preventDefault(); Shell.volume(e.deltaY < 0 ? 4 : -4); }, { passive: false });
+$('#tVol').addEventListener('contextmenu', (e) => { e.preventDefault(); Shell.volume('mute'); });
+$('#gear').onclick = () => Shell.sys('themer');
+$('#gear').onmouseenter = () => Shell.tip.show($('#gear'), 'TRANSCRYPTO Themer'); $('#gear').onmouseleave = () => Shell.tip.hide();
+$('#quit').onclick = async () => { const r = await Shell.power('exit', $('#quit')); if (r === 'armed') Shell.tip.show($('#quit'), 'click again to exit TRANSCRYPTO'); };
+$('#quit').onmouseleave = () => Shell.tip.hide();
+
+/* ---------- sound */
+function chime(f, v = .06, dur = .9) { if (!sfx) return; const c = Shell.ac(), t = c.currentTime;
+  [1, 2.01, 3.02].forEach((m, i) => { const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f * m;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v / (i + 1), t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + dur); o.connect(g).connect(c.destination); o.start(t); o.stop(t + dur); }); }
+function whoosh(up = true, dur = .7) { if (!sfx) return; const c = Shell.ac(), t = c.currentTime, n = c.sampleRate * dur, b = c.createBuffer(1, n, c.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+  const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(); s.buffer = b; f.type = 'bandpass'; f.Q.value = 1.2;
+  f.frequency.setValueAtTime(up ? 300 : 2500, t); f.frequency.exponentialRampToValueAtTime(up ? 2500 : 250, t + dur);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.18, t + dur * .4); g.gain.linearRampToValueAtTime(0, t + dur); s.connect(f).connect(g).connect(c.destination); s.start(t); }
+function pop(f = 600) { if (!sfx) return; const c = Shell.ac(), t = c.currentTime, o = c.createOscillator(), g = c.createGain(); o.type = 'sine';
+  o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 2.4, t + .06); g.gain.setValueAtTime(.12, t); g.gain.exponentialRampToValueAtTime(.0001, t + .12); o.connect(g).connect(c.destination); o.start(t); o.stop(t + .15); }
+const ARP = [523, 587, 659, 784, 880, 1047, 1175, 1319, 1568, 1760, 2093, 2349, 2637, 3136, 3520, 4186];
+
+const anim = (el, kf, o) => el.animate(kf, Object.assign({ fill: 'both', easing: 'cubic-bezier(.2,.8,.2,1)' }, o, { duration: o.duration * speed, delay: (o.delay || 0) * speed })).finished.catch(() => {});
+const wait = (ms) => new Promise((r) => setTimeout(r, ms * speed));
+const later = (ms, fn) => setTimeout(fn, ms * speed);
+const SPRING = 'linear(0, .45 9%, .86 20%, 1.08 31%, 1.12 37%, 1.06 49%, .98 61%, 1.01 76%, 1)';
+function burst(x, y, n = 16) {
+  for (let i = 0; i < n; i++) { const p = document.createElement('div'); p.className = 'particle'; const c = ['--g1', '--g2', '--g3'][i % 3];
+    p.style.background = `var(${c})`; p.style.boxShadow = `0 0 10px var(${c})`; p.style.left = x + 'px'; p.style.top = y + 'px'; stage.append(p);
+    const a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 120;
+    anim(p, [{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px, ${Math.sin(a) * d}px) scale(0)`, opacity: 0 }], { duration: 700 + Math.random() * 400 }).then(() => p.remove()); }
+}
+/* orbit slots for the Start pins: 9 on the inner ring, the rest on the outer one */
+function slot(i, n, extra = 0) {
+  const inner = Math.min(9, n), onInner = i < inner, k = onInner ? i : i - inner, m = onInner ? inner : n - inner;
+  const a0 = onInner ? 200 : 207, a1 = onInner ? 340 : 333, R = onInner ? R1 : R2;
+  const ang = (m > 1 ? a0 + k * (a1 - a0) / (m - 1) : 270) * Math.PI / 180 + (onInner ? extra : -extra * .8);
+  return { x: C.x + Math.cos(ang) * R, y: C.y + Math.sin(ang) * R };
+}
+
+/* ---------- menu content */
+function fillMenu() {
+  // left stack: the last files you opened
+  const rf = ((Shell.start && Shell.start.recentFiles) || []).slice(0, 4);
+  $$('.card.file').forEach((c, i) => {
+    const f = rf[i]; c.style.visibility = f ? '' : 'hidden'; if (!f) return;
+    const dir = f.path.replace(/\\[^\\]*$/, '');
+    c.innerHTML = `<img src="${Shell.icon(f.icon || f.path, 64)}" alt=""><div class="tx"><h3>${Shell.esc(f.name)}</h3><p>${Shell.esc(dir)}</p><p>${f.when ? 'opened ' + Shell.ago(f.when) + ' ago' : ''}</p></div>`;
+    c.title = f.path; c.dataset.p = f.path; c.onclick = () => Shell.open$(f.path);
+  });
+  $$('.card.stat').forEach((c) => { c.onclick = () => Shell.sys('taskmgr'); c.title = 'Task Manager'; });
+  if (Shell.state) stats(Shell.state.sys);
+}
+/* right stack: live PC stats (the poll runs every ~0.9 s while the menu is open) */
+function stats(s) {
+  const set = (k, v, txt, sub) => { const c = $(`.card.stat[data-k="${k}"]`); if (!c) return; c.querySelector('b').textContent = txt; c.querySelector('.bar2 i').style.width = Math.max(0, Math.min(100, v)) + '%'; if (sub != null) c.querySelector('.sub').textContent = sub; };
+  set('cpu', s.cpu, s.cpu + '%'); set('ram', s.ram, s.ram + '%');
+  set('gpu', s.gpu < 0 ? 0 : s.gpu, s.gpu < 0 ? 'n/a' : s.gpu + '%');
+  // log scale up to 10 MB/s, so light traffic still moves the bar without pinning it at full
+  const down = s.down || 0, up = s.up || 0, lg = (b) => Math.log10(1 + b) / 7 * 100;
+  set('net', lg(Math.max(down, up)), '↓ ' + Shell.rate(down), '↑ ' + Shell.rate(up));
+}
+$('#q').addEventListener('input', () => {
+  const res = Shell.search($('#q').value), box = $('#results');
+  box.style.display = res.length ? 'flex' : 'none';
+  box.innerHTML = res.slice(0, 7).map((a) => `<div data-p="${Shell.esc(a.path)}"><img src="${Shell.icon(a.icon, 32)}" alt="">${Shell.esc(a.name)}</div>`).join('');
+  $$('div', box).forEach((d) => d.onclick = () => Shell.open$(d.dataset.p));
+});
+$('#q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { const f = $('#results div'); if (f) f.click(); } });
+$$('.bub').forEach((b) => b.onclick = async () => { if (b.dataset.n === 'allapps') return allApps(); if (b.dataset.pw) Shell.power(b.dataset.n, b); else { Shell.sys(b.dataset.n); melt(); } });
+/* All Apps: every Start menu app, A-Z, with a quick filter */
+function allApps(on) {
+  const p = $('#allp'); if (on === undefined) on = !p.classList.contains('on');
+  if (!on) { p.classList.remove('on'); return; }
+  $('#allQ').value = ''; drawAll(''); p.classList.add('on'); setTimeout(() => $('#allQ').focus(), 60);
+}
+function drawAll(q) {
+  const s = q.trim().toLowerCase(), apps = ((Shell.start && Shell.start.apps) || []).filter((a) => !s || a.name.toLowerCase().includes(s)).sort((a, b) => a.name.localeCompare(b.name));
+  let h = '', last = '';
+  for (const a of apps) { const c = /[a-z]/i.test(a.name[0]) ? a.name[0].toUpperCase() : '#'; if (c !== last) { h += `<div class="L">${c}</div>`; last = c; }
+    h += `<div class="a" data-p="${Shell.esc(a.path)}" title="${Shell.esc(a.name)}"><img src="${Shell.icon(a.icon, 32)}" alt="" loading="lazy">${Shell.esc(a.name)}</div>`; }
+  $('#allL').innerHTML = h || '<div class="L">NOTHING FOUND</div>'; $('#allN').textContent = apps.length; $('#allL').scrollTop = 0;
+  $$('#allL .a').forEach((d) => d.onclick = () => Shell.open$(d.dataset.p));
+}
+$('#allQ').addEventListener('input', () => drawAll($('#allQ').value));
+$('#allQ').addEventListener('keydown', (e) => { if (e.key === 'Enter') { const f = $('#allL .a'); if (f) f.click(); } });
+$('#allX').onclick = () => allApps(false);
+// a click outside the menu closes it; inside the All Apps list it only closes the list; the bar stays usable
+document.addEventListener('mousedown', (e) => {
+  if (!open || busy) return;
+  if ($('#allp').classList.contains('on') && !e.target.closest('.allp, .bub, .tcCtx')) { allApps(false); return; }
+  if (!e.target.closest('.card, .bub, .oi, .search, .results, .coreIco, .clock, .allp, .ico, .dock, .gear, .tcCtx')) melt();
+});
+
+/* ---------- bloom */
+async function bloom() {
+  busy = true; Shell.busy = true; Shell.tip.hide();
+  await Promise.all([Shell.act('menu', { open: 1 }), Shell.start ? null : Shell.loadStart()]);
+  await Shell.useScreenshot(true);
+  Shell.ac().resume?.(); fillMenu(); $('#q').value = ''; $('#results').style.display = 'none';
+  const pins = ((Shell.start && Shell.start.pins) || []).slice(0, 16);
+  chime(392, .05, 1.2); whoosh(true, .9);
+  anim($('#core'), [{ transform: 'scale(1)' }, { transform: 'scale(.8)', offset: .3 }, { transform: 'scale(1.35)' }], { duration: 380, easing: 'ease-in-out' });
+  anim($('#pillEdge'), [{ opacity: 1 }, { opacity: 0 }], { duration: 200 });
+  for (const el of [$('#dock'), $('#gear'), $('#quit')]) anim(el, [{ transform: 'none', opacity: 1 }, { transform: 'translateY(30px)', opacity: 0 }], { duration: 400, delay: 100 });
+  await wait(260);
+  // orbit pairs: a droplet in the liquid layer under a crisp icon; they start on the bar slots (or inside the core)
+  orbs = pins.map((pin, i) => {
+    const b = bar[i], from = b ? { x: b.x, y: BY } : { x: 640, y: BY }, to = slot(i, pins.length);
+    const d = document.createElement('div'); d.className = 'od'; $('#goo').append(d);
+    const ic = document.createElement('div'); ic.className = 'oi'; ic.innerHTML = `<img src="${b ? Shell.icon(b.a.icon, 64) : Shell.icon(pin.icon, 64)}" alt="">`; stage.append(ic);
+    for (const el of [d, ic]) { el.style.left = from.x - 23 + 'px'; el.style.top = from.y - 23 + 'px'; }
+    if (b) { b.d.style.visibility = 'hidden'; b.ic.style.visibility = 'hidden'; }
+    ic.onmouseenter = () => { hovering = true; Shell.tip.show(ic, pin.name); chime(1200 + i * 30, .02); }; ic.onmouseleave = () => { hovering = false; Shell.tip.hide(); };
+    ic.dataset.p = pin.path; ic.onclick = () => Shell.open$(pin.path);
+    const mid = { x: (from.x + to.x) / 2 + (from.x < 640 ? -60 : 60), y: Math.min(from.y, to.y) - 40 }, delay = 60 + Math.abs(i - pins.length / 2) * 40;
+    const kf = [{ transform: `translate(0,0) scale(${b ? .83 : 0})` }, { transform: `translate(${mid.x - from.x}px, ${mid.y - from.y}px) scale(1.25)`, offset: .45 }, { transform: `translate(${to.x - from.x}px, ${to.y - from.y}px) scale(1)` }];
+    anim(d, kf, { duration: 900, delay, easing: SPRING }); anim(ic, kf, { duration: 900, delay, easing: SPRING });
+    later(delay + 380, () => { ic.querySelector('img').src = Shell.icon(pin.icon, 64); });
+    later(delay + 620, () => chime(ARP[i % ARP.length], .03, .7));
+    return { d, ic, pin, from, i };
+  });
+  bar.slice(pins.length).forEach((b) => { anim(b.d, [{ opacity: 1 }, { opacity: 0 }], { duration: 300 }); anim(b.ic, [{ opacity: 1 }, { opacity: 0 }], { duration: 300 }); });
+  const w = parseFloat($('#pill').style.width);
+  anim($('#pill'), [{ width: w + 'px', left: 640 - w / 2 + 'px' }, { width: '48px', left: '616px', offset: .7 }, { width: '48px', left: '616px', opacity: 0 }], { duration: 760, delay: 200, easing: 'cubic-bezier(.7,0,.2,1)' });
+  await wait(520);
+  anim($('#core'), [{ transform: 'translate(0,0) scale(1.35)' }, { transform: `translate(0,${LIFT * .55}px) scale(1.9)`, offset: .5 }, { transform: `translate(0,${LIFT}px) scale(3.2)` }], { duration: 820, easing: SPRING });
+  anim($('#coreIco'), [{ transform: 'none' }, { transform: `translate(0,${LIFT}px) scale(2.2)` }], { duration: 820, easing: SPRING });
+  anim($('#halo'), [{ opacity: 0, transform: 'scale(.3)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 900, delay: 200 });
+  await wait(560);
+  burst(C.x, C.y, 26); chime(523, .05, 1.4); chime(784, .04, 1.4);
+  anim($('#orbit'), [{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+  const r1 = $("#ring1"), L = 2 * Math.PI * R1; r1.style.strokeDasharray = L;
+  anim(r1, [{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: 800, easing: 'cubic-bezier(.6,0,.2,1)' });
+  anim($('#clock'), [{ opacity: 0, transform: 'translateY(-40px) scale(.94)' }, { opacity: 1, transform: 'none' }], { duration: 700, easing: SPRING });
+  anim($('#search'), [{ opacity: 0, transform: 'scaleX(.05)' }, { opacity: 1, transform: 'scaleX(1.06)', offset: .7 }, { opacity: 1, transform: 'none' }], { duration: 600, delay: 160 });
+  $$('.stackT').forEach((t) => anim(t, [{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 200 }));
+  $$('.card').forEach((c, i) => { const left = parseFloat(c.style.left) < 640, row = i % 4; c.classList.remove('glass');
+    anim(c, [{ opacity: 0, transform: `translateX(${left ? -140 : 140}px) scale(.96)` }, { opacity: 1, transform: 'none' }], { duration: 650, delay: 140 + row * 70, easing: SPRING }).then(() => c.classList.add('glass'));   // anim() already returns the finished promise
+    later(120 + i * 90 + 400, () => whoosh(false, .35)); });
+  $$('.bub').forEach((b, i) => { const a = +b.dataset.a * Math.PI / 180, x = C.x + Math.cos(a) * RB - 27, y = C.y + Math.sin(a) * RB - 27;
+    b.style.left = x + 'px'; b.style.top = y + 'px';
+    anim(b, [{ opacity: 0, transform: `translate(${C.x - 27 - x}px, ${C.y - 27 - y}px) scale(0)` }, { opacity: 1, transform: 'none' }], { duration: 700, delay: 380 + i * 90, easing: SPRING });
+    later(380 + i * 90 + 300, () => pop(500 + i * 120)); });
+  await wait(1100);
+  orbs.forEach((o) => o.ic.classList.add('live'));
+  // like a real taskbar, the running apps stay on the bar while the menu is open: the drops that left for the rings well up again
+  bar.forEach((b, i) => { for (const el of [b.d, b.ic]) { el.style.visibility = ''; anim(el, [{ opacity: 0, transform: 'scale(.2)' }, { opacity: 1, transform: 'scale(1.15)', offset: .7 }, { opacity: 1, transform: 'none' }], { duration: 380, delay: i * 30, easing: SPRING }); } });
+  startSpin(); open = true; Shell.open = true; busy = false; Shell.busy = false;
+  setTimeout(() => $('#q').focus(), 50);
+}
+
+// the pins rest on the ring once they have flown in (no circling): hover or click pops the icon a little (CSS)
+function startSpin() {
+  spinA = 0; spin = null;
+  orbs.forEach((o) => { const p = slot(o.i, orbs.length, 0), tx = `translate(${p.x - o.from.x}px, ${p.y - o.from.y}px)`;
+    o.d.getAnimations().forEach((a) => a.cancel()); o.ic.getAnimations().forEach((a) => a.cancel()); o.d.style.transform = tx; o.ic.style.transform = tx; });
+}
+
+/* ---------- melt */
+async function melt() {
+  if (!open || busy) return;
+  busy = true; Shell.busy = true; spin = null; hovering = false; Shell.tip.hide(); $('#q').blur(); whoosh(false, .9); chime(659, .04, .8); allApps(false);
+  orbs.forEach((o, i) => { const p = slot(o.i, orbs.length, spinA), tx = `translate(${p.x - o.from.x}px, ${p.y - o.from.y}px)`;
+    for (const el of [o.d, o.ic]) { el.style.transform = ''; anim(el, [{ transform: tx + ' scale(1)', opacity: 1 }, { transform: tx + ' scale(0)', opacity: 0 }], { duration: 240, delay: i * 10, easing: 'cubic-bezier(.5,0,.9,.5)' }); } });
+  anim($('#orbit'), [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.6)', transformOrigin: `${C.x}px ${C.y}px` }], { duration: 300 });
+  anim($('#halo'), [{ opacity: 1 }, { opacity: 0, transform: 'scale(.3)' }], { duration: 360 });
+  await wait(230);
+  $$('.stackT').forEach((t) => anim(t, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }));
+  $$('.card').forEach((c) => c.classList.remove('glass'));
+  $$('.card').forEach((c, i) => anim(c, [{ opacity: 1 }, { opacity: 0, transform: `translate(${640 - parseFloat(c.style.left) - 131}px, ${C.y - parseFloat(c.style.top) - 37}px) scale(.1) rotate(${i % 2 ? 180 : -180}deg)` }], { duration: 520, delay: i * 40, easing: 'cubic-bezier(.6,0,.9,.4)' }));
+  $$('.bub').forEach((b, i) => { anim(b, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translate(${C.x - 27 - parseFloat(b.style.left)}px, ${C.y - 27 - parseFloat(b.style.top)}px) scale(0)` }], { duration: 380, delay: i * 50 }); later(i * 50 + 200, () => pop(900 - i * 100)); });
+  for (const e of [$('#clock'), $('#search'), $('#results')]) anim(e, [{ opacity: 1 }, { opacity: 0, transform: 'scale(.96)' }], { duration: 280 });
+  anim($('#core'), [{ transform: `translate(0,${LIFT}px) scale(3.2)` }, { transform: `translate(0,${LIFT * .65}px) scale(1.4)`, offset: .5 }, { transform: 'translate(0,0) scale(1)' }], { duration: 700, delay: 120, easing: SPRING });
+  anim($('#coreIco'), [{ transform: `translate(0,${LIFT}px) scale(2.2)` }, { transform: 'none' }], { duration: 700, delay: 120, easing: SPRING });
+  const w = parseFloat($('#pill').style.width);
+  anim($('#pill'), [{ width: '48px', left: '616px', opacity: 1 }, { width: w + 60 + 'px', left: 640 - (w + 60) / 2 + 'px', offset: .7 }, { width: w + 'px', left: 640 - w / 2 + 'px', opacity: 1 }], { duration: 700, delay: 420, easing: SPRING });
+  for (const el of [$('#dock'), $('#gear'), $('#quit')]) anim(el, [{ transform: 'translateY(30px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 480, delay: 600, easing: SPRING });
+  await wait(1000);
+  burst(640, BY, 14);
+  anim($('#pillEdge'), [{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+  await wait(320);
+  orbs.forEach((o) => { o.d.remove(); o.ic.remove(); }); orbs = [];
+  bar.forEach((b) => { b.d.style.visibility = ''; b.ic.style.visibility = ''; });
+  stage.getAnimations({ subtree: true }).forEach((a) => { if (!(a instanceof CSSAnimation)) a.cancel(); });
+  open = false; Shell.open = false;
+  await Shell.useScreenshot(false);
+  await Shell.act('menu', { open: 0 });
+  busy = false; Shell.busy = false;
+  if (Shell.state) { appsSig = Shell.appsSig(Shell.state.apps); renderBar(Shell.state.apps); }
+  Shell.scheduleHide(1200);
+}
+
+$('#coreIco').onclick = () => { if (busy) return; open ? melt() : bloom(); };
+Shell.onStart = () => { if (busy) return; open ? melt() : bloom(); };
+Shell.onEscape = () => { if ($('#allp').classList.contains('on')) allApps(false); else melt(); }; Shell.onBlur = () => melt(); Shell.close = () => melt();
+Shell.poll(); Shell.loadStart();
+setInterval(() => { if (!open && !Shell.hidden) relayout(); }, 5000);
+setTimeout(() => Shell.setupAutohide(stage), 1200);
+</script>
+</body>
+</html>

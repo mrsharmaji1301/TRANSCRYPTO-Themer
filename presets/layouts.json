@@ -1,0 +1,36 @@
+{
+  "taskbar": [
+    { "id": "tb-win11", "name": "Windows 11 Default", "desc": "Centered, search box, Task View and Widgets.",
+      "values": { "tb.align": 1, "tb.search": 2, "tb.taskview": true, "tb.widgets": true, "tb.copilot": false, "tb.combine": 0, "tb.small": 2, "tb.autohide": false, "tb.seconds": false, "tb.badges": true, "tb.peek": true, "tb.endtask": false  } },
+    { "id": "tb-classic", "name": "Classic Left", "desc": "Win10 feel: left aligned, app names shown, seconds in the clock.",
+      "values": { "tb.align": 0, "tb.search": 1, "tb.taskview": false, "tb.widgets": false, "tb.copilot": false, "tb.combine": 2, "tb.small": 1, "tb.autohide": false, "tb.seconds": true, "tb.badges": true, "tb.peek": true, "tb.endtask": true  } },
+    { "id": "tb-dock", "name": "Minimal Dock", "desc": "Centered big icons only, hides itself until you need it.",
+      "values": { "tb.align": 1, "tb.search": 0, "tb.taskview": false, "tb.widgets": false, "tb.copilot": false, "tb.combine": 0, "tb.small": 1, "tb.autohide": true, "tb.seconds": false, "tb.badges": true, "tb.peek": false, "tb.endtask": false  } },
+    { "id": "tb-compact", "name": "Compact Pro", "desc": "Left, small buttons, End task, seconds. Max space for apps.",
+      "values": { "tb.align": 0, "tb.search": 0, "tb.taskview": false, "tb.widgets": false, "tb.copilot": false, "tb.combine": 1, "tb.small": 0, "tb.autohide": false, "tb.seconds": true, "tb.badges": true, "tb.peek": true, "tb.endtask": true  } },
+    { "id": "tb-focus", "name": "Focus", "desc": "Nothing pulls your eye: auto-hide, no badges, no flashing.",
+      "values": { "tb.align": 1, "tb.search": 0, "tb.taskview": false, "tb.widgets": false, "tb.copilot": false, "tb.combine": 0, "tb.small": 0, "tb.autohide": true, "tb.seconds": false, "tb.badges": false, "tb.flash": false, "tb.peek": false, "tb.endtask": false  } },
+    { "id": "tb-power", "name": "Power User", "desc": "Centered, labels on, small buttons, End task, seconds.",
+      "values": { "tb.align": 1, "tb.search": 1, "tb.taskview": true, "tb.widgets": false, "tb.copilot": false, "tb.combine": 2, "tb.small": 0, "tb.autohide": false, "tb.seconds": true, "tb.badges": true, "tb.peek": true, "tb.endtask": true  } }
+  ],
+  "startmenu": [
+    { "id": "sm-win11", "name": "Windows 11 Default", "desc": "Pins + Recommended, Bing search, nothing extra next to Power.",
+      "folders": [],
+      "values": { "start.layout": 0, "start.recentApps": true, "start.mostUsed": true, "start.recentFiles": true, "start.tips": true, "start.account": true, "start.hideRecommended": false, "start.webSearch": true, "start.bing": true } },
+    { "id": "sm-clean", "name": "Clean", "desc": "No Recommended section, more pins, no web results.",
+      "folders": ["Settings", "FileExplorer", "Downloads"],
+      "values": { "start.layout": 1, "start.recentApps": false, "start.mostUsed": false, "start.recentFiles": false, "start.tips": false, "start.account": false, "start.hideRecommended": true, "start.webSearch": false, "start.bing": false } },
+    { "id": "sm-productive", "name": "Productivity", "desc": "More recommendations, recent files, work folders by Power.",
+      "folders": ["Documents", "Downloads", "FileExplorer", "Settings"],
+      "values": { "start.layout": 2, "start.recentApps": true, "start.mostUsed": true, "start.recentFiles": true, "start.tips": false, "start.account": false, "start.hideRecommended": false, "start.webSearch": false, "start.bing": false } },
+    { "id": "sm-private", "name": "Private", "desc": "Nothing tracked or suggested, no web search.",
+      "folders": ["Settings", "FileExplorer"],
+      "values": { "start.layout": 0, "start.recentApps": false, "start.mostUsed": false, "start.recentFiles": false, "start.tips": false, "start.account": false, "start.hideRecommended": false, "start.webSearch": false, "start.bing": false, "start.searchHighlights": false } },
+    { "id": "sm-creator", "name": "Creator", "desc": "More pins, media folders next to Power.",
+      "folders": ["Pictures", "Videos", "Music", "Downloads", "FileExplorer", "Settings"],
+      "values": { "start.layout": 1, "start.recentApps": true, "start.mostUsed": false, "start.recentFiles": true, "start.tips": false, "start.account": false, "start.hideRecommended": false, "start.webSearch": false, "start.bing": false } },
+    { "id": "sm-pins", "name": "Pins Only", "desc": "Just your pinned apps. Zero noise.",
+      "folders": ["Settings"],
+      "values": { "start.layout": 1, "start.recentApps": false, "start.mostUsed": false, "start.recentFiles": false, "start.tips": false, "start.account": false, "start.hideRecommended": true, "start.webSearch": false, "start.bing": false, "start.searchHighlights": false } }
+  ]
+}
